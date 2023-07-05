@@ -19,6 +19,7 @@ export default function OneWayFlights({ navigation }){
         applyFilter, updateFilter } = useContext(globalState)
     let [sort, setSort] = useState(false)
     let [loading, setLoading] = useState(true)
+    let [icon, setIcon] = useState(null)
     let [flightInfo, setFlightInfo] = useState([])
 
     let dateProcessor = (data) => {
@@ -141,9 +142,8 @@ export default function OneWayFlights({ navigation }){
                     price_max: Math.max(...flightsListBackup.map(item => item.price)),
                     time_min: Math.min(...flightsListBackup.map(item => item.departure_raw)),
                     time_max: Math.max(...flightsListBackup.map(item => item.departure_raw)),
-                    stop_min: Math.min(...flightsListBackup.map(item => item.stops)),
-                    stop_max: Math.max(...flightsListBackup.map(item => item.stops)),
-                    flight: [...new Set(flightsListBackup.map(item => item.flight_name))]
+                    flight: [...new Set(flightsListBackup.map(item => item.flight_name))],
+                    stop: [...new Set(flightsListBackup.map(item => item.stops))]
                 }))
                 resolve('Success')
             })
@@ -198,12 +198,171 @@ export default function OneWayFlights({ navigation }){
                     filterFour.push(data)
                 }
             })
-            setFlightInfo(filterFour)
+        }
+
+        let filterFive = []
+        if(filterFour.length !== 0){
+            if(applyFilter.stops !== null){
+                filterFour.map((data) => {
+                    if(data.stops == applyFilter.stops){
+                        filterFive.push(data)
+                    }
+                })
+                setFlightInfo(filterFive)
+            }
         }
         else{
-            setFlightInfo(filterThree)
+            if(applyFilter.stops !== null){
+                filterThree.map((data) => {
+                    if(data.stops == applyFilter.stops){
+                        filterFive.push(data)
+                    }
+                })
+                setFlightInfo(filterFive)
+            }
+            else{
+                setFlightInfo(filterThree)
+            }
         }
     }, [applyFilter])
+
+    const sortings1 = (options) => {
+        let arr = [...flightInfo]; // Create a copy of the flightInfo array
+        const sortedArr = arr.sort(function(a, b) {
+          // Extract days, hours, and minutes from the duration strings
+          var low = a.price
+          var high = b.price
+          return low - high;
+        });
+      
+        console.log(sortedArr);
+        setFlightInfo(sortedArr);
+        setIcon(options);
+        setSort(false);
+    }
+
+    const sortings2 = (options) => {
+        let arr = [...flightInfo]; // Create a copy of the flightInfo array
+        const sortedArr = arr.sort(function(a, b) {
+          // Extract days, hours, and minutes from the duration strings
+          var low = a.price
+          var high = b.price
+          return high - low;
+        });
+      
+        console.log(sortedArr);
+        setFlightInfo(sortedArr);
+        setIcon(options);
+        setSort(false);
+    }
+
+    const sortings3 = (options) => {
+        let arr = [...flightInfo]; // Create a copy of the flightInfo array
+        const sortedArr = arr.sort(function(a, b) {
+          // Extract days, hours, and minutes from the duration strings
+          var durationA = a.duration.match(/\d+/g).map(Number);
+          var durationB = b.duration.match(/\d+/g).map(Number);
+        
+          // Convert duration values to total minutes
+          var totalMinutesA = durationA[0] * 24 * 60 + durationA[1] * 60 + durationA[2];
+          var totalMinutesB = durationB[0] * 24 * 60 + durationB[1] * 60 + durationB[2];
+        
+          return totalMinutesB - totalMinutesA;
+        });
+      
+        console.log(sortedArr);
+        setFlightInfo(sortedArr);
+        setIcon(options);
+        setSort(false);
+    }
+      
+    const sortings4 = (options) => {
+        let arr = [...flightInfo]; // Create a copy of the flightInfo array
+        const sortedArr = arr.sort(function(a, b) {
+          // Extract days, hours, and minutes from the duration strings
+          var durationA = a.duration.match(/\d+/g).map(Number);
+          var durationB = b.duration.match(/\d+/g).map(Number);
+        
+          // Convert duration values to total minutes
+          var totalMinutesA = durationA[0] * 24 * 60 + durationA[1] * 60 + durationA[2];
+          var totalMinutesB = durationB[0] * 24 * 60 + durationB[1] * 60 + durationB[2];
+        
+          return totalMinutesA - totalMinutesB;
+        });
+      
+        console.log(sortedArr);
+        setFlightInfo(sortedArr);
+        setIcon(options);
+        setSort(false);
+    }
+
+    const sortings5= (options) => {
+            let arr = [...flightInfo]; // Create a copy of the flightInfo array
+            const sortedArr = arr.sort(function(a, b) {
+              // Extract the time values from the departure strings
+              var timeA = a.departure.split(' ')[0];
+              var timeB = b.departure.split(' ')[0];
+            
+              // Convert time values to a comparable format (e.g., 24-hour format)
+              var formattedTimeA = convertTo24HourFormat(timeA);
+              var formattedTimeB = convertTo24HourFormat(timeB);
+            
+              // Compare the time values
+              if (formattedTimeA < formattedTimeB) {
+                return -1;
+              } else if (formattedTimeA > formattedTimeB) {
+                return 1;
+              }
+              return 0;
+            });
+          
+            console.log(sortedArr);
+            setFlightInfo(sortedArr);
+            setIcon(options);
+            setSort(false);
+    }
+          
+    const sortings6 = (options) => {
+        let arr = [...flightInfo]; // Create a copy of the flightInfo array
+        const sortedArr = arr.sort(function(a, b) {
+          // Extract the time values from the arrival strings
+          var timeA = a.arrival.split(' ')[0];
+          var timeB = b.arrival.split(' ')[0];
+        
+          // Convert time values to a comparable format (e.g., 24-hour format)
+          var formattedTimeA = convertTo24HourFormat(timeA);
+          var formattedTimeB = convertTo24HourFormat(timeB);
+        
+          // Compare the time values
+          if (formattedTimeA < formattedTimeB) {
+            return -1;
+          } else if (formattedTimeA > formattedTimeB) {
+            return 1;
+          }
+          return 0;
+        });
+      
+        console.log(sortedArr);
+        setFlightInfo(sortedArr);
+        setIcon(options);
+        setSort(false);
+    }
+      
+      // Function to convert time to 24-hour format
+      function convertTo24HourFormat(time) {
+        var [hours, minutes] = time.split(':');
+        var period = time.slice(-2);
+      
+        if (period === 'AM' && hours === '12') {
+          hours = '00';
+        } else if (period === 'PM' && hours !== '12') {
+          hours = (parseInt(hours) + 12).toString();
+        }
+      
+        return hours + ':' + minutes;
+      }
+          
+    
 
     return(
         <View style={_flights.container}>
@@ -219,7 +378,7 @@ export default function OneWayFlights({ navigation }){
                             setSelected(item)
                             navigation.navigate('Baggage')
                         }}>
-                            <Card containerStyle={{ borderRadius: 22, padding: 0 }}>
+                            <Card containerStyle={{ borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5  }}>
                                 <View style={{ marginHorizontal: 12 }}>
                                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Image source={{ uri: `${FlightLogo}${item.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
@@ -306,29 +465,41 @@ export default function OneWayFlights({ navigation }){
             <Modal visible={sort} transparent={true}>
                 <View style={_flights.sortCard}>
                     <Card containerStyle={{ borderRadius: 22 }}>
-                        <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
+                        <TouchableOpacity
+                        onPress={()=>sortings1("low to high")}
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Price low to high</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
+                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'low to high' ? '#3B78FF' : 'white'}/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
+                        <TouchableOpacity
+                        onPress={()=>sortings2("high to low")}
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Price high to low</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
+                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'high to low' ? '#3B78FF' : 'white'}/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
+                        <TouchableOpacity 
+                        onPress={()=>sortings3("Longest duration")}
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Longest duration</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
+                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'Longest duration' ? '#3B78FF' : 'white'}/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
+                        <TouchableOpacity
+                        onPress={()=>sortings4("Shortest duration")}
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Shortest duration</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
+                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'Shortest duration' ? '#3B78FF' : 'white'}/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
+                        <TouchableOpacity 
+                        onPress={()=>sortings5("Departs first")}
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Departs first</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
+                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'Departs first' ? '#3B78FF' : 'white'}/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
+                        <TouchableOpacity 
+                        onPress={()=>sortings6("Arrives first")}
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Arrives first</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
+                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'Arrives first' ? '#3B78FF' : 'white'}/>
                         </TouchableOpacity>
                     </Card>
                     <View style={_flights.cancelButton}>
@@ -343,6 +514,7 @@ export default function OneWayFlights({ navigation }){
         </View>
     )
 }
+
 
 let _flights = StyleSheet.create({
     container: {

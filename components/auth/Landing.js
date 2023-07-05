@@ -15,8 +15,8 @@ export default function Landing({ navigation }){
             <View style={_landing.theContent}>
                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 50 }}>Travelfika</Text>
                 <Text style={{ fontFamily: 'poppins-regular', fontSize: 15, textAlign: 'center' }}>{'Travel always exciting and\ncreate unforgettable memories\nin our life'}</Text>
-                <TouchableOpacity style={_landing.terms}  onPress={()=>navigation.navigate('PrivacyPolicy')}>
-                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12, marginBottom: "2%", marginTop: "2%",  textDecorationLine: "underline",textDecorationStyle: "solid",textDecorationColor: "#000", }}>Terms and Conditions</Text>
+                <TouchableOpacity onPress={()=>navigation.navigate('Policy')}>
+                <Text style={{ fontFamily: 'poppins-regular', fontSize: 15, textAlign: 'center', textDecorationLine: 'underline', color: 'blue' }}>Terms & Conditions</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={_landing.button} onPress={()=>navigation.navigate('FikaTab')}>
                     <Text style={{ color: 'white', fontFamily: 'poppins-regular', fontSize: 20 }}>Get Started</Text>

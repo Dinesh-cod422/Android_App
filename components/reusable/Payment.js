@@ -22,7 +22,7 @@ export default function Payment({ navigation }){
                     </TouchableOpacity>
                     <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginLeft: 10 }}>Credit card or Debit card</Text>
                 </View>
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3}}>
                     <View style={_payment.cardHeader}>
                         <Image source={require('../../assets/visa.png')} style={{ marginHorizontal: 4 }}/>
                         <Image source={require('../../assets/american-express.png')} style={{ marginHorizontal: 4 }}/>

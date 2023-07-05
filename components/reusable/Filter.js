@@ -16,13 +16,17 @@ export default function Filter({ navigation }){
     let [priceRange, setPriceRange] = useState(0)
     let [depTime, setDepTime] = useState(0)
     let [flight, setFlight] = useState(null)
+    let [localStop, setLocalStop] = useState(null)
 
     let flightsList = useRef(range.flight)
+
 
     useEffect(() => {
         setTripTime(range.trip_max)
         setPriceRange(range.price_max)
         setDepTime(range.time_max)
+
+        console.log(' Stops: ' + range.stop)
     }, [])
 
     return(
@@ -45,7 +49,7 @@ export default function Filter({ navigation }){
             </View>
             <ScrollView>
                 {/* Trip time card */}
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5  }}>
                     <View style={_filter.cardHeader}>
                         <TouchableOpacity>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Trip time</Text>
@@ -78,8 +82,8 @@ export default function Filter({ navigation }){
 
                 {/* Stops card */}
                 {
-                    (range.stop_max > range.stop_min) ?
-                    <Card containerStyle={{ borderRadius: 22 }}>
+                    range.stop.length > 1 ?
+                    <Card containerStyle={{ borderRadius: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5  }}>
                         <View style={_filter.cardHeader}>
                             <TouchableOpacity>
                                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>No of stops</Text>
@@ -89,28 +93,27 @@ export default function Filter({ navigation }){
                             </TouchableOpacity>
                         </View>
                         <View>
-                            <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Non stop</Text>
-                                <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
-                            </TouchableOpacity>
-                            <View style={{ height: 1.5, width: '100%', backgroundColor: '#DBDBDB' }}></View>
-                            <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>1 stop</Text>
-                                <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
-                            </TouchableOpacity>
-                            <View style={{ height: 1.5, width: '100%', backgroundColor: '#DBDBDB' }}></View>
-                            <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>2 stop</Text>
-                                <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
-                            </TouchableOpacity>
-                            <View style={{ height: 1.5, width: '100%', backgroundColor: '#DBDBDB' }}></View>
+                            {
+                                range.stop.map((ele, i) => (
+                                    <>
+                                        <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}
+                                        onPress={()=>setLocalStop(ele)}>
+                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{ele} stop</Text>
+                                            <Icon name='checkmark-sharp' type='ionicon' color={localStop === ele ? '#3B78FF' : 'white'} />
+                                        </TouchableOpacity>
+                                        <View style={{ height: 1.5, width: '100%', backgroundColor: '#DBDBDB' }}></View>
+                                    </>
+                                ))
+                            }
+                            {/*
                             <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}>
                                 <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>All options</Text>
                                 <Icon name='checkmark-sharp' type='ionicon' color='#3B78FF' />
                             </TouchableOpacity>
+                        */}
                         </View>
                     </Card>:
-                    <Card containerStyle={{ borderRadius: 22 }}>
+                    <Card containerStyle={{ borderRadius: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5  }}>
                         <View style={_filter.cardHeader}>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>No of stops</Text>
                         </View>
@@ -124,7 +127,7 @@ export default function Filter({ navigation }){
                 }
 
                 {/* Price range card */}
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5  }}>
                     <View style={_filter.cardHeader}>
                         <TouchableOpacity>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Price range</Text>
@@ -156,7 +159,7 @@ export default function Filter({ navigation }){
                 </Card>
 
                 {/* Flight timings card */}
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5  }}>
                     <View style={_filter.cardHeader}>
                         <TouchableOpacity>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Flight timings</Text>
@@ -221,7 +224,7 @@ export default function Filter({ navigation }){
                 </Card>
 
                 {/* Airlines card */}
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5  }}>
                     <View style={_filter.cardHeader}>
                         <TouchableOpacity>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Airlines</Text>
@@ -262,7 +265,8 @@ export default function Filter({ navigation }){
                             tripTime: tripTime,
                             priceRange: priceRange,
                             depTime: depTime,
-                            flight: flight
+                            flight: flight,
+                            stops: localStop
                         })
                         navigation.navigate('OneWayFlights')
                     }}>

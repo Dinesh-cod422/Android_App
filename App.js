@@ -30,13 +30,12 @@ export default function App() {
     flights_count: 0,
     trip_min: 0,
     trip_max: 0,
-    stop_min: 0,
-    stop_max: 0,
     price_min: 0,
     price_max: 0,
     time_min: 0,
     time_max: 0,
-    flight: []
+    flight: [],
+    stop: []
   })
   let [reprice, setReprice] = useState({
     adult_fare: 0,
@@ -49,7 +48,7 @@ export default function App() {
         tripTime: 0,
         priceRange: 0,
         depTime: 0,
-        stops: 0,
+        stops: null,
         flight: null
   })
   let [bookingId, setBookingId] = useState(null)

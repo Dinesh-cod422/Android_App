@@ -16,7 +16,7 @@ export default function PrivacyPolicy({navigation}){
         <View style={_privacy.con1}>
         <View >
           <Image source={require('../../assets/Travelfika_header_Logo.png')} style={{
-              height: 88,
+              height: 48,
               width: 264,
               
             }} />
@@ -94,11 +94,12 @@ let _privacy = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "10%",
+        padding: "7%",
     },
     con1: {
-        marginBottom: "5%", 
+        marginBottom: "1%", 
         marginRight: "6%",
+        padding: 8,
     },
     box1: {
         width: "100%", 

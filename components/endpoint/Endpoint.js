@@ -4,6 +4,7 @@ export let FlightLogo = 'https://assets.travelfika.com/airline-logo/'
 export let FlightReprice = 'http://54.83.81.246:88/api/v1/flight/reprice/'
 export let PaymentUrl = 'http://54.83.81.246:88/api/v1/flight/initPayBook/guest'
 export let BookedUrl = 'http://54.83.81.246:88/api/v1/flight/bookingDetails/'
+export let CancelTicket = 'http://54.83.81.246:88/api/v1/flight/cancel/'
 
 /*
 Customer Service: http://54.90.242.68/api/v1

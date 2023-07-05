@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput, Modal } from 'react-native'
 import { Icon, Card } from '@rneui/themed';
 import React, { useEffect, useState, useContext } from 'react'
 import { globalState } from '../../App';
@@ -6,6 +6,9 @@ import TimeLine from './TimeLine';
 import axios from 'axios';
 import { FlightLogo } from '../endpoint/Endpoint';
 import { BookedUrl } from '../endpoint/Endpoint';
+import { CancelTicket } from '../endpoint/Endpoint';
+import { CardDivider } from '@rneui/base/dist/Card/Card.Divider';
+
 
 export default function Confirmation({ navigation }){
 
@@ -17,6 +20,13 @@ export default function Confirmation({ navigation }){
         bookingId, setBookingId,
         reprice, setReprice,
         cardName, setCardName } = useContext(globalState)
+        let [popup, setPopup] = useState(false)
+        let [popup1, setPopup1] = useState(false)
+        let [popup2, setPopup2] = useState(false)
+        let [popup3, setPopup3] = useState(false)
+        let [yess, setYess] = useState(false)
+        console.log(bookingId)
+
 
     let [invoice, setInvoice] = useState({
         api_pnr: null,
@@ -29,8 +39,9 @@ export default function Confirmation({ navigation }){
         last4: null,
         subtotal: null,
         tax: null,
-        paid: null
+        paid: null, 
     })
+    let [refund, setRefund] = useState({ refAmount: null })
 
     let dateProcessor = (data) => {
         let d = new Date(data.toString())
@@ -87,6 +98,7 @@ export default function Confirmation({ navigation }){
 
         axios.get(`${BookedUrl}${bookingId}`)
         .then((response) => {
+            console.log(response.data);
             setInvoice({
                 api_pnr: response.data.data.api_pnr,
                 onboard: response.data.data.flight_journey[0].journey_segments[0].origin_airport_name,
@@ -105,6 +117,31 @@ export default function Confirmation({ navigation }){
             console.log('Error: ' + e);
         })
     }, [])
+    
+    
+
+      const CancelTickets = () => {
+        axios.get(`${CancelTicket}${bookingId}`)
+        .then((response) => {
+            console.log(response.data);
+            setInvoice({
+                refAmount: response.data.data.amount,
+            })
+            setYess(true)
+
+            setTimeout(() => {
+                setYess(false);
+                setPopup(false)
+                navigation.navigate('Home')
+              }, 5000);
+            })
+            .catch((e) => {
+              console.log('Error: ' + e);
+            });
+        
+      }
+
+      
 
     let RoundTripCard = () => {
         return(
@@ -229,7 +266,7 @@ export default function Confirmation({ navigation }){
     return(
         <View style={_confirmation.container}>
             <TimeLine goBack={() => {hideBottomTab('flex'), navigation.navigate('Home')}}/>
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
                 {/* Selected details starts here */}
                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', marginLeft: 18, marginTop: 18 }}>Booking Complete</Text>
                 <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#06122B', marginLeft: 18, marginTop: 14 }}>
@@ -266,13 +303,428 @@ export default function Confirmation({ navigation }){
                                 <Text style={{ color: '#06122B', fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 4 }}>{`From: ${invoice.onboard} airport`}</Text>
                                 <Text style={{ color: '#06122B', fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 4 }}>{`To: ${invoice.offboard} airport`}</Text>
                                 <Text style={{ color: '#06122B', fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 4 }}>{`Departure by ${invoice.departure} on ${travelDetail.calendar}`}</Text>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={()=>setPopup1(true)}>
                                     <Text style={{ color: '#3B78FF', fontFamily: 'poppins-bold', fontSize: 12, marginVertical: 4 }}>View full Itinerary</Text>
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>setPopup(true)}>
                                 <Text style={{ color: '#3B78FF', fontFamily: 'poppins-bold', fontSize: 12, textAlign: 'center' }}>Cancel{"\n"}Reservation?</Text>
                             </TouchableOpacity>
+
+                            <Modal visible={popup} transparent={true}>
+                                <ScrollView>
+                                    <View style={_confirmation.authCard}>
+                                        <Card containerStyle={{ borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                                            <View>
+                                                <View style={{marginLeft: "30%",flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283' }}>Cancel the ticket?</Text>
+                                                    <Icon name="close" type='ionicon' color='#3B78FF' size={20} fontFamily='poppins-bold' justifyContent="flex-end" width={100} onPress={() =>setPopup(false)} />
+                                                </View>
+                                                <Card containerStyle={{borderRadius:10, backgroundColor: "#E7EDFB",shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5}}>
+                                                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#06122B', marginBottom: "1%" }}>Cancellation Policy</Text>
+                                                    <CardDivider/>
+                                                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#06122B' }}>Cancellation mode within 24hr or within specific date wii be given full refund. Otherwise charged may applied or taken from the refund amount.</Text>
+                                                </Card>
+                                                <View style={_confirmation.cancelButton}>
+                                                    <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, paddingHorizontal: 60, paddingVertical: 5,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}
+                                                    onPress={()=>setPopup(false)}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Payment Summary</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <Card containerStyle={{borderRadius: 10, flexDirection: "column", marginTop: "-10%", zIndex:-10, marginBottom: "5%",shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                                                    <View style={{flexDirection: "row", justifyContent: "space-between", marginTop: "5%", marginVertical: "1%" }}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Cost summary</Text>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Round trip</Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    {
+                                                        travelDetail.adult !== 0 ?
+                                                        <>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#0D3283' }}>{`${travelDetail.adult} x adult`}</Text>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>{`$${parseInt(travelDetail.adult)*reprice.adult_fare}`}</Text>
+                                                        </View>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, color: '#0D3283' }}>({`${travelDetail.adult} x ${reprice.adult_fare}`})</Text>
+                                                        </View>
+                                                        </>:null
+                                                    }
+                                                    {
+                                                        travelDetail.children !== 0 ?
+                                                        <>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#0D3283' }}>{`${travelDetail.children} x children`}</Text>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>{`$${parseInt(travelDetail.children)*reprice.child_fare}`}</Text>
+                                                        </View>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, color: '#0D3283' }}>({`${travelDetail.children} x ${reprice.child_fare}`})</Text>
+                                                        </View>
+                                                        </>:null
+                                                    }
+                                                    {
+                                                        travelDetail.infant !== 0 ?
+                                                        <>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#0D3283' }}>{`${travelDetail.infant} x infant`}</Text>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>{`$${parseInt(travelDetail.infant)*reprice.infant_fare}`}</Text>
+                                                        </View>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, color: '#0D3283' }}>({`${travelDetail.infant} x ${reprice.infant_fare}`})</Text>
+                                                        </View>
+                                                        </>:null
+                                                    }
+                                                        
+                                                        
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between", marginVertical: "2%"}}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#0D3283' }}>Tax</Text>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>{`$${reprice.total_tax}`}</Text>
+                                                        </View>
+                                                    <CardDivider color='#06122B'/>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between", marginTop: "-1%", marginVertical: "3%"}}>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Total Charged</Text>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>{`$${reprice.grand_total}`}</Text>
+                                                        </View>
+                                                    <CardDivider color='#06122B'/>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between", marginTop: "-1%", marginVertical: "3%"}}>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#15A209' }}>Total refund</Text>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#15A209' }}>{`$${reprice.grand_total}`}</Text>
+                                                        </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#0D3283', marginTop: "-1%", marginVertical: "3%" }}>Are you sure want to cancel this ticket ?</Text>
+                                                            <View style={{flexDirection: "row", justifyContent: "space-between", width: "50%", marginVertical: "3%"}}>
+                                                            <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, width: 62, height: 25, justifyContent: "center", alignItems: "center" }}
+                                                            onPress={CancelTickets}>
+                                                                <Text style={{ fontFamily: 'poppins-bold', fontSize: 17, color: 'white' }}>Yes</Text>
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, width: 62, height: 25, justifyContent: "center", alignItems: "center" }}
+                                                            onPress={()=>setPopup(false)}>
+                                                                <Text style={{ fontFamily: 'poppins-bold', fontSize: 17, color: 'white' }}>No</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#0D3283' }}>By clicking yes, I understand this will permanently cancel my ticket. If you wish to cancel some but not all passengers, please contact customer care</Text>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between", marginVertical: "1%" }}>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginTop: "4%" }}>Need help?</Text>
+                                                        <View style={{display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 8, color: '#0D3283', marginTop: "22%" }}>Customer care</Text>
+                                                        </View>
+                                                        </View>
+                                                    <CardDivider color='#06122B'/>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 7, color: '#0D3283', marginTop: "2%" }}>Give us a call</Text>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between", marginVertical: "1%"}}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 7, color: '#0D3283' }}>From united states</Text>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 8, color: '#0D3283' }}>(855) 650-FIKA</Text>
+                                                        </View>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between", marginVertical: "1%"}}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 8, color: '#0D3283' }}>From other countries</Text>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 8, color: '#0D3283' }}>(855) 650-FIKA</Text>
+                                                        </View>
+                                                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 7, color: '#0D3283', width: "75%",marginVertical: "1%" }}>(Note: To talk to the customer care, you need ticket number and Booking reference number in hand)</Text>
+                                                </Card>
+                                            </View>
+                                            
+                                        </Card>
+                                        
+                                    </View>
+                                </ScrollView>
+                            </Modal>
+                            <Modal visible={yess} transparent={true}>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+
+                                    <View style={_confirmation.authCard1}>
+                                    <View style={_confirmation.cancelButton1}>
+                                        <TouchableOpacity style={{width: "93%", backgroundColor: '#3B78FF', borderRadius: 10, paddingHorizontal: 50, paddingVertical: 5,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}
+                                         onPress={()=>setYess(false)}>
+                                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Cancellation Successful</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                        <Card containerStyle={{ zIndex:-1,marginTop: "-10%",borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                                            <View>
+                                               
+                                                <View style={{justifyContent: "center", alignItems: "center", marginTop: "17%", marginBottom: "7%"}}>
+                                                <Image source={require('../../assets/checked.png')} style={{ height: 63, width: 63}} />
+                                                </View>
+                                                <View style={{textAlign: "center"}}>
+                                                    <Text style={{fontSize: 12, fontFamily: "poppins-regular", textAlign:"center"}}>Your tickets has been cancelled successfully. Please check</Text>
+                                                    <Text style={{fontSize: 12, fontFamily: "poppins-regular", textAlign:"center"}}>your bank account for refund.Your refund money </Text>
+                                                    <Text style={{fontSize: 12, fontFamily: "poppins-regular", textAlign:"center"}}>will be generated witin 48 hours.</Text>
+                                                    <Text style={{fontSize: 12, fontFamily: "poppins-regular", textAlign:"center", marginVertical: "5%", marginBottom: "7%"}}>Thank you for using Travelfika</Text>
+                                                </View>
+                                                
+                                            </View>
+                                            
+                                        </Card>
+                                        
+                                    </View>
+                                    </View>
+
+                            </Modal>
+                            <Modal visible={popup1} transparent={true}>
+                                <ScrollView>
+                                    <View style={_confirmation.authCard}>
+                                        <Card containerStyle={{marginTop: "50%", borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                                            <View>
+                                                <View style={{marginLeft: "30%", marginTop: "-1%", marginVertical: "2%",flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283' }}>View full Itinerary</Text>
+                                                    <Icon name="close" type='ionicon' color='#3B78FF' size={20} fontFamily='poppins-bold' justifyContent="flex-end" width={100} onPress={() =>setPopup1(false)} />
+                                                </View>
+                                                <CardDivider color='#06122B'/>
+                                                <Text style={{textAlign: "center", fontFamily: 'poppins-bold', fontSize: 12, color: "#0D3283", marginTop:'-1%'}}>Flight information</Text>
+
+                                                <Card containerStyle={{borderRadius: 22, marginHorizontal: "1%", marginTop:"9%", marginBottom: "12%",shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5}}>
+                                                <View >
+                                                    <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: "1%"  }}>
+                                                        <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 50, height: 30 }} />
+                                                        <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 9 }}>{travelDetail.calendar}</Text>
+                                                    </View>
+                                                    {/* Arrow */}
+                                                    <View style={{width: '80%', flexDirection: 'row', alignItems: 'center', marginVertical: 14, justifyContent: 'space-around', marginHorizontal: "1%"  }}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 17 }}>{selected.origin}</Text>
+                                                        <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
+                                                            <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
+                                                            <View style={{ position: 'absolute', left: '-5%' }}>
+                                                                <Icon name='caret-back' type='ionicon' color='#0D3283' size={20} />
+                                                            </View>
+                                                            <View style={{ position: 'absolute', right: '-5%' }}>
+                                                                <Icon name='caret-forward' type='ionicon' color='#0D3283'size={20}  />
+                                                            </View>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, position: 'absolute', left: '33%', top: '80%' }}>{`(${selected.duration})`}</Text>
+                                                        </View>
+                                                        <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 17 }}>{selected.destination}</Text>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', width: '80%' }}>
+                                                        <View style={{ width: '50%' }}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%"  }}>{selected.departure}</Text>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%"  }}>{selected.from}</Text>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%"  }}>{selected.stops} stop</Text>
+                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <Icon name='luggage' type='material' color='#3B78FF' size={11}/>
+                                                                <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%" }}>{selected.carry}</Text>
+                                                            </View>
+                                                        </View>
+                                                        <View style={{ width: '53%', alignItems: 'flex-end' }}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%", textAlign: 'left' }}>{selected.arrival}</Text>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%", textAlign: 'left' }}>{selected.to}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{marginTop: "6%", marginHorizontal: "-2%"}}>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 9, color: "#0D3283", marginVertical: "2%", marginHorizontal: "1%" }}>Seat Selection summary</Text>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: "row", marginTop: "-2%", marginBottom: "8%" }}>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%" }}>{selected.from} to {selected.to}</Text>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%" }}>{selected.to}</Text>
+                                                    </View>
+
+                                                    </View>
+                                                   
+                                                    
+
+                                                </View>
+                                                </Card>
+
+                                                
+                                            </View>
+                                            
+                                        </Card>
+                                        
+                                    </View>
+                                </ScrollView>
+                            </Modal>
+                            <Modal visible={popup2} transparent={true}>
+                                <ScrollView>
+                                    <View style={_confirmation.authCard}>
+                                        <Card containerStyle={{borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                                            <View style={{width: "100%", justifyContent: "center"}}>
+                                                <View style={{ flex: 1, marginVertical: "2%", flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', textAlign: "center", marginLeft:"3%" }}>Identification and Documentation Requirements</Text>
+                                                    <Icon name="close" type='ionicon' color='#3B78FF' size={20} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50} onPress={() => setPopup2(false)} />
+                                                </View>
+                                                <CardDivider color='#06122B'/>
+                                                <View>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "3%", marginTop:"1%" }}>Identification and Documentation Requirements</Text>
+                                                    <Text>Lorem Ipsum has been the industry's  survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more</Text>
+                                                    <View style={{marginTop:"4%", marginBottom: "2%"}}>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    
+                                                    </View>
+
+                                                </View>
+                                                <View>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "3%", marginTop:"1%" }}>Identification and Documentation Requirements</Text>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    
+                                                </View>
+                                                <View>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "3%", marginTop:"1%" }}>International Travel-Adults and children</Text>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    
+                                                </View>
+                                                <View>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "3%", marginTop:"1%" }}>Other Required Documents</Text>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                </View>
+                                                <View>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "3%", marginTop:"1%" }}>What I do if I last my ID ?</Text>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='#06122B' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <View style={{flexDirection: "row", marginBottom:"2%"}}>
+                                                    <Icon name="ellipse" type='ionicon' color='white' justifyContent="center" size={9} fontFamily='poppins-bold' alignItems="flex-start" marginTop="-15%" height={50}  />
+                                                    <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12, marginLeft: "1%"}}>Lorem Ipsum has been the industry's  survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more</Text>
+                                                    </View>
+                                                </View>
+
+                                            </View>
+                                            
+                                        </Card>
+                                        
+                                    </View>
+                                </ScrollView>
+                            </Modal>
+                            <Modal visible={popup3} transparent={true}>
+                                <ScrollView>
+                                    <View style={_confirmation.authCard}>
+                                        <Card containerStyle={{borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                                            <View style={{width: "100%", justifyContent: "center"}}>
+                                                <View style={{ flex: 1, marginVertical: "2%", flexDirection: "row", alignItems: "center", justifyContent: "center", marginLeft:"10%"}}>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', textAlign: "center", marginLeft:"2%" }}>Frequently asked question</Text>
+                                                    <Icon name="close" type='ionicon' color='#3B78FF' size={20} fontFamily='poppins-bold' marginLeft="2%" width={50} onPress={() =>setPopup3(false)} />
+                                                </View>
+                                                <CardDivider color='#06122B'/>
+                                                <View style={{marginVertical:"1%"}}>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+                                                    <View style={{marginVertical: "4%", marginTop:"1%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginBottom: "2%" }}>How do I print my receipt ?</Text>
+                                                        <Text style={{width:"87%",fontFamily: 'poppins-regular', fontSize: 12}} >Lorem Ipsum has been the industry's survived not only five centuries, but also the leap into electronic setting, remaining essentially unchanged. It </Text>
+                                                    </View>
+                                                    <CardDivider color='#06122B'/>
+
+                                                    
+                                                    
+
+                                                </View>
+                                                
+
+                                            </View>
+                                            
+                                        </Card>
+                                        
+                                    </View>
+                                </ScrollView>
+                            </Modal>
+                            
                         </View>
                         <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Flight Itinerary Information</Text>
@@ -319,7 +771,7 @@ export default function Confirmation({ navigation }){
                             </Text>
                         </View>
                         <View style={{ marginVertical: 16 }}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>setPopup2(true)}>
                                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#3B78FF' }}>More info about airlines {">"}</Text>
                             </TouchableOpacity>
                         </View>
@@ -337,7 +789,7 @@ export default function Confirmation({ navigation }){
                         </View>
                         <View style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Purchase date</Text>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>31-03-2023</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Payment method</Text>
@@ -378,7 +830,7 @@ export default function Confirmation({ navigation }){
                     <View style={{ paddingHorizontal: 20 }}>
                         <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#06122B', marginVertical: 4 }}>Can I Change my date?</Text>
                         <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#06122B', marginVertical: 4 }}>How do I print my receipt?</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => setPopup3(true)}>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#3B78FF', marginVertical: 4 }}>See all FAQ’s here</Text>
                         </TouchableOpacity>
                     </View>
@@ -429,6 +881,7 @@ let _confirmation = StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: 'white',
+        flex: 1,
     },
     cardHeader: {
         width: '100%',
@@ -468,4 +921,28 @@ let _confirmation = StyleSheet.create({
         width: '100%',
         justifyContent: 'space-around'
     },
+    authCard: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'flex-end',
+        paddingVertical: 10,
+    },
+    authCard1: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'flex-end',
+        paddingVertical: 10,
+        marginBottom:"95%",
+    },
+    cancelButton: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 20
+    },
+    cancelButton1: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 })

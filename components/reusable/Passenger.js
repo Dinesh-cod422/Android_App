@@ -72,7 +72,7 @@ export default function Passenger({ navigation }){
 
     let RroundTripCard = () => {
         return(
-            <Card containerStyle={{ borderRadius: 22, padding: 0 }}>
+            <Card containerStyle={{ borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3 }}>
                 <View style={{ marginHorizontal: 12 }}>
                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
                     <Image source={require('../../assets/airways.png')} style={{ width: 60, resizeMode: 'contain' }} />
@@ -165,7 +165,7 @@ export default function Passenger({ navigation }){
 
     let OneViewCard = () => {
         return(
-            <Card containerStyle={{ borderRadius: 22, padding: 0 }}>
+            <Card containerStyle={{ borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3 }}>
                 <View style={{ marginHorizontal: 12 }}>
                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
@@ -231,13 +231,13 @@ export default function Passenger({ navigation }){
         if(newArr[id]['Gender']){
             newArr[id] = {...newArr[id], Title: (newArr[id]['Gender'] == 'Male')?'Mr':'Miss', PassengerTypeCode: type, FrequentFlyerNumber: null, IsWheelchair: false, MealCode: null}
         }
-
         passengerVariable = newArr
+        console.log(passengerVariable)
     }
 
     let PassengerForm = ({ num, type }) => {
         return(
-            <Card containerStyle={{ borderRadius: 22 }}>
+            <Card containerStyle={{ borderRadius: 22 ,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3}}>
                 <View style={_passenger.cardHeader}>
                     <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#3B78FF' }}>Passenger #{num+1}</Text>
                     <TouchableOpacity>
@@ -471,7 +471,7 @@ export default function Passenger({ navigation }){
 
                 {/* Billing address details starts here */}
                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', marginLeft: 18, marginTop: 18 }}>Billing details</Text>
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3 }}>
                     <View style={_passenger.cardHeader}>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#0D3283' }}>Billing address</Text>
                     </View>
@@ -501,7 +501,7 @@ export default function Passenger({ navigation }){
 
                 {/* Fare summary starts here */}
                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', marginLeft: 18, marginTop: 18 }}>Fare summary</Text>
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3}}>
                     <View style={_passenger.cardHeader}>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#0D3283' }}>Cost summary</Text>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#0D3283' }}>Oneway trip</Text>
@@ -509,31 +509,31 @@ export default function Passenger({ navigation }){
                     {
                         travelDetail.adult !== 0 ?
                         <View style={_passenger.fareSummary}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, color: '#06122B' }}>{`${travelDetail.adult} x adults\n(${travelDetail.adult} x ${Math.round(reprice.adult_fare)})`}</Text>
-                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#06122B' }}>{`$${parseInt(travelDetail.adult)*Math.round(reprice.adult_fare)}`}</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, color: '#06122B' }}>{`${travelDetail.adult} x adults\n(${travelDetail.adult} x ${reprice.adult_fare})`}</Text>
+                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#06122B' }}>{`$${parseInt(travelDetail.adult)*reprice.adult_fare}`}</Text>
                         </View>:null
                     }
                     {
                         travelDetail.children !== 0 ?
                         <View style={_passenger.fareSummary}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, color: '#06122B' }}>{`${travelDetail.children} x adults\n(${travelDetail.children} x ${Math.round(reprice.child_fare)})`}</Text>
-                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#06122B' }}>{`$${parseInt(travelDetail.children)*Math.round(reprice.child_fare)}`}</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, color: '#06122B' }}>{`${travelDetail.children} x children\n(${travelDetail.children} x ${reprice.child_fare})`}</Text>
+                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#06122B' }}>{`$${parseInt(travelDetail.children)*reprice.child_fare}`}</Text>
                         </View>:null
                     }
                     {
                         travelDetail.infant !== 0 ?
                         <View style={_passenger.fareSummary}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, color: '#06122B' }}>{`${travelDetail.infant} x adults\n(${travelDetail.infant} x ${Math.round(reprice.infant_fare)})`}</Text>
-                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#06122B' }}>{`$${parseInt(travelDetail.infant)*Math.round(reprice.infant_fare)}`}</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, color: '#06122B' }}>{`${travelDetail.infant} x infant\n(${travelDetail.infant} x ${reprice.infant_fare})`}</Text>
+                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#06122B' }}>{`$${parseInt(travelDetail.infant)*reprice.infant_fare}`}</Text>
                         </View>:null
                     }
                     <View style={_passenger.fareSummary}>
                         <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, color: '#06122B' }}>Tax</Text>
-                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#06122B' }}>{`$${Math.round(reprice.total_tax)}`}</Text>
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#06122B' }}>{`$${reprice.total_tax}`}</Text>
                     </View>
                     <View style={_passenger.grandTotal}>
                         <View style={{ backgroundColor: '#3B78FF', marginVertical: 20, paddingVertical: 6, paddingHorizontal: 55, borderRadius: 10, elevation: 2 }}>
-                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>{`Grand total : $${Math.round(reprice.grand_total)}`}</Text>
+                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>{`Grand total : $${reprice.grand_total}`}</Text>
                         </View>
                     </View>
                     <View style={[_passenger.cardHeader, { marginBottom: 8 }]}>
@@ -573,7 +573,7 @@ export default function Passenger({ navigation }){
                     </TouchableOpacity>
                     <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', marginLeft: 10 }}>Credit card or Debit card</Text>
                 </View>
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3 }}>
                     <View style={_payment.cardHeader}>
                         <Image source={require('../../assets/visa.png')} style={{ marginHorizontal: 4 }}/>
                         <Image source={require('../../assets/american-express.png')} style={{ marginHorizontal: 4 }}/>

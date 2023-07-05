@@ -5,6 +5,7 @@ import { globalState } from "../../App";
 import { Calendar } from 'react-native-calendars';
 import axios from "axios";
 import { AirportSearchUrl } from "../endpoint/Endpoint";
+import { CardDivider } from "@rneui/base/dist/Card/Card.Divider";
 
 export default function Home({ navigation }){
 
@@ -23,7 +24,10 @@ export default function Home({ navigation }){
     let [countModal, openCountModal] = useState(false)
 
     let selectionStyle = {
-        padding: 4,
+        paddingVertical: 4,
+        paddingBottom: 0,
+        paddingHorizontal:6,
+        marginVertical:8,
         backgroundColor: '#E7EDFB',
         borderRadius: 4,
         borderWidth: 1,
@@ -73,7 +77,7 @@ export default function Home({ navigation }){
                             marginVertical: 12, 
                             fontSize: 12,
                             fontFamily: 'poppins-regular',
-                            textAlign: 'center'
+                            textAlign: 'center',
                         },
                         props.style
                     ]}>{props.title}</Text>
@@ -104,33 +108,33 @@ export default function Home({ navigation }){
         )
     }
 
-    let PlacesList = () => {
-        return(
-            <View style={{ marginVertical: 40, marginHorizontal: 20 }}>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={{ width: '90%' }}>
-                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 15 }}>Top cities to visit around United Kingdom</Text>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Popular places where users used to travel a lot. Explore and have fun</Text>
-                    </View>
-                    <View>
-                        <Icon name='chevron-forward-outline' type='ionicon' color='#3B78FF' reverse size={14} />
-                    </View>
-                </View>
-                <Card>
-                    <Card.Image
-                        source={{
-                        uri:
-                            'https://awildgeographer.files.wordpress.com/2015/02/john_muir_glacier.jpg',
-                        }}
-                    />
-                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
-                        <Icon name='location' type='ionicon' />
-                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Scotland</Text>
-                    </View>
-                </Card>
-            </View>
-        )
-    }
+    // let PlacesList = () => {
+    //     return(
+    //         <View style={{ marginVertical: 40, marginHorizontal: 20 }}>
+    //             <View style={{ flexDirection: "row" }}>
+    //                 <View style={{ width: '90%' }}>
+    //                     <Text style={{ fontFamily: 'poppins-bold', fontSize: 15 }}>Top cities to visit around United Kingdom</Text>
+    //                     <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Popular places where users used to travel a lot. Explore and have fun</Text>
+    //                 </View>
+    //                 <View>
+    //                     <Icon name='chevron-forward-outline' type='ionicon' color='#3B78FF' reverse size={14} />
+    //                 </View>
+    //             </View>
+    //             <Card>
+    //                 <Card.Image
+    //                     source={{
+    //                     uri:
+    //                         'https://awildgeographer.files.wordpress.com/2015/02/john_muir_glacier.jpg',
+    //                     }}
+    //                 />
+    //                 <View style={{ flexDirection: 'row', marginTop: 12 }}>
+    //                     <Icon name='location' type='ionicon' />
+    //                     <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Scotland</Text>
+    //                 </View>
+    //             </Card>
+    //         </View>
+    //     )
+    // }
 
     let navigateToOneWayFlights = () => {
         setStage({ one: true, two: false, three: false })
@@ -275,9 +279,189 @@ export default function Home({ navigation }){
                         <Text style={{ color: 'white', fontFamily: 'poppins-bold', fontSize: 20 }}>Search Flights</Text>
                     </TouchableOpacity>
                 </Card>
-                <PlacesList />
-                <PlacesList />
-                <PlacesList />
+            <View style={{ marginTop: 20, marginHorizontal: 20 }}>
+            <View style={{ width:"100%", flexDirection: "row", marginVertical: "2%", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <View style={{ width: '85%' }}>
+                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 15 }}>Top cities to visit around United States</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Popular places where users used to travel a lot. Explore and have fun</Text>
+                </View>
+                <View style={{ marginLeft:"4%" }}>
+                    <View style={{backgroundColor: "#3B78FF", borderRadius:60,marginTop:"45%"}}>
+                    <Icon name='chevron-forward' type='ionicon' color='#FFFFFF' size={14} />
+                    </View>
+                </View>
+            </View>
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/losangeles.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Los Angeles</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+                
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/atlanta.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Atlanta</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+                
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/sandiegoj.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>San Diego</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+              
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/sanfranciso.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>San Francisco</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+              
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/newyork.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>New York</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+              
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/miami.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Miami</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+              
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/seattle.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Seattle</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+              
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/denver.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Denver</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+              
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/orlando.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Orlando</Text>
+                    </View>
+                </Card>
+
+            </View>
+
+            <View style={{ marginVertical: 20, marginTop:0, marginHorizontal: 20 }}>
+              
+                <Card containerStyle={{shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 3, elevation: 3}}>
+                    <Card.Image
+                        source={require('../../assets/dallas.jpg')} style={{
+                            height: 259,
+                            width: 324
+                        }} 
+                    />
+                    <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                        <Icon name='location' type='ionicon' size={20} />
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 16 }}>Dallas</Text>
+                    </View>
+                </Card>
+
+            </View>
+            
             </ScrollView>
             <Modal visible={calendarModal}>
                 <View style={_home.calendarView}>
@@ -516,7 +700,12 @@ let _home = StyleSheet.create({
         backgroundColor: 'white'
     },
     cardOne: {
-        borderRadius: 22
+        borderRadius: 22, 
+        shadowColor: '#000', 
+        shadowOffset: { width: 0, height: 1 }, 
+        shadowOpacity: 0.8, 
+        shadowRadius: 3, 
+        elevation: 3
     },
     logoButtons: {
         flexDirection: 'row',

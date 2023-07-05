@@ -4,8 +4,8 @@ import { TouchableOpacity, Text } from 'react-native';
 import Landing from '../auth/Landing'
 import Signin from '../auth/Signin';
 import FikaTab from './FikaTab';
-import Confirmation from '../reusable/Confirmation';
-import PrivacyPolicy from '../reusable/PrivacyPolicy';
+import PrivacyPolicy from '../auth/PrivacyPolicy';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -15,8 +15,8 @@ export default function Index() {
     <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Landing" component={Landing} />
+          <Stack.Screen name="Policy" component={PrivacyPolicy} />
           <Stack.Screen name="FikaTab" component={FikaTab} />
-          <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="Signin" component={Signin} options={{
             title: 'Signin',
             headerStyle: {

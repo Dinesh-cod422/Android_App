@@ -37,43 +37,50 @@ export default function Baggage({ navigation }){
                 let infantFare = 0
                 loop.map((ele) => {
                     if(ele.PassengerType == 'ADT'){
-                        console.log('Adult: ' + ele.InvoiceFare);
-                        adultFare = ele.InvoiceFare
+                        adultFare = ele.GrossFare
                         setReprice(prevPrice => ({
                             ...prevPrice,
-                            adult_fare: ele.InvoiceFare
+                            adult_fare: ele.GrossFare
                         }))
                     }
                     else if(ele.PassengerType == 'CHD'){
-                        console.log('Child: ' + ele.InvoiceFare);
-                        childFare = ele.InvoiceFare
+                        childFare = ele.GrossFare
                         setReprice(prevPrice => ({
                             ...prevPrice,
-                            child_fare: ele.InvoiceFare
+                            child_fare: ele.GrossFare
                         }))
                     }
                     else if(ele.PassengerType == 'INF'){
-                        console.log('Infant: ' + ele.InvoiceFare);
-                        infantFare = ele.InvoiceFare
+                        infantFare = ele.GrossFare
                         setReprice(prevPrice => ({
                             ...prevPrice,
-                            infant_fare: ele.InvoiceFare
+                            infant_fare: ele.GrossFare
                         }))
                     }
                 })
     
-                let af = Math.round(adultFare) * travelDetail.adult
-                let cf = Math.round(childFare) * travelDetail.children
-                let inf = Math.round(infantFare) * travelDetail.infant
-                let acinf = af+cf+inf
+                let af = adultFare * travelDetail.adult
+                let cf = childFare * travelDetail.children
+                let inf = infantFare * travelDetail.infant
+
+                console.log('Adult Fare: ' + af);
+                console.log('Child Fare: ' + cf);
+                console.log('Infant Fare: ' + inf)
+
+                let acinf = af + cf + inf + 2 * travelDetail.passengers
+
+                console.log('Combined: ' + acinf);
     
-                let totalTax = acinf/100*3
+                let totalTax = acinf / 100 * 3
+
+                console.log('Tax: ' + totalTax);
+
                 let grandTotal = acinf + totalTax
                 console.log('Grand Total: ' + grandTotal);
     
                 setReprice(prevPrice => ({
                     ...prevPrice,
-                    total_tax: totalTax,
+                    total_tax: Math.round(totalTax),
                     grand_total: Math.round(grandTotal)
                 }))
                 resolve('success')
@@ -214,7 +221,7 @@ export default function Baggage({ navigation }){
     
     let OneWayCard = () => {
         return(
-            <Card containerStyle={{ borderRadius: 22, padding: 0 }}>
+            <Card containerStyle={{ borderRadius: 22, padding: 0, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5  }}>
                 <View style={{ marginHorizontal: 12 }}>
                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
@@ -287,7 +294,7 @@ export default function Baggage({ navigation }){
 
                 {/* Baggage info starts here */}
                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', marginLeft: 18, marginTop: 18 }}>Baggage Information</Text>
-                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card containerStyle={{ borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3  }}>
                     <View style={_baggage.cardHeader}>
                         <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
                         <TouchableOpacity onPress={() => setInfocard(!infocard ? true : false)}>
@@ -310,7 +317,7 @@ export default function Baggage({ navigation }){
                 {/* Baggage info ends here */}
 
                 {/* Baggage collapse starts here */}
-                <Card containerStyle={{ borderRadius: 22, display: infocard ? 'flex':'none' }}>
+                <Card containerStyle={{ borderRadius: 22, display: infocard ? 'flex':'none', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3  }}>
                     <View style={_baggage.cardHeader}>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', width: '33.3%', textAlign: 'left' }}>Flight</Text>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283', width: '33.3%', textAlign: 'center' }}>Type</Text>
@@ -350,7 +357,7 @@ export default function Baggage({ navigation }){
             </ScrollView>
             <Modal visible={popup} transparent={true}>
                 <View style={_baggage.authCard}>
-                    <Card containerStyle={{ borderRadius: 22 }}>
+                    <Card containerStyle={{ borderRadius: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 4, elevation: 3  }}>
                         <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Sign in</Text>
                         </TouchableOpacity>
