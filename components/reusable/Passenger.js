@@ -260,6 +260,7 @@ export default function Passenger({ navigation }){
                 <View style={_passenger.inputBox}>
                     <TextInput placeholder='Country*' style={{ width: '100%', height: '100%', paddingLeft: 6 }} onChangeText={(e)=>updateTextValue(e, 'Nationality', num, type)} value={passengerVariable[num] != undefined ? passengerVariable[num]['Nationality'] : null}/>
                 </View>
+                
                 <ListItem.Accordion content={
                     <ListItem.Content>
                         <ListItem.Title>{expand.payload}</ListItem.Title>
@@ -672,6 +673,8 @@ export default function Passenger({ navigation }){
                     testID="dateTimePicker"
                     mode={"date"}
                     value={new Date()}
+                    minimumDate={dobModal.type === "ADT" ? new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()) && dobModal.type === "CHD" ? new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) && dobModal.type === "INF" ? new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) }
+                    maximumDate={ dobModal.type === "CHD" ? new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) : dobModal.type === "INF" ? new Date() : dobModal.type === "ADT" ? new Date(new Date().getFullYear() - 13, new Date().getMonth(), new Date().getDate()) : undefined }
                     onChange={(date) => {
                         var d = new Date(date.nativeEvent.timestamp).getDate()
                         var m = new Date(date.nativeEvent.timestamp).getMonth() + 1
