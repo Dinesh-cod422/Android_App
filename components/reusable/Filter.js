@@ -11,10 +11,13 @@ let flight = null
 export default function Filter({ navigation }){
 
     let { range, setRange,
+          travel, setTravel,
+          travelDetail, setTravelDetail,
           applyFilter, updateFilter } = useContext(globalState)
     let [tripTime, setTripTime] = useState(0)
     let [priceRange, setPriceRange] = useState(0)
     let [depTime, setDepTime] = useState(0)
+    let [depTime1, setDepTime1] = useState(0)
     let [flight, setFlight] = useState(null)
     let [localStop, setLocalStop] = useState(null)
 
@@ -25,6 +28,7 @@ export default function Filter({ navigation }){
         setTripTime(range.trip_max)
         setPriceRange(range.price_max)
         setDepTime(range.time_max)
+        setDepTime1(range.time_maxR)
 
         console.log(' Stops: ' + range.stop)
     }, [])
@@ -171,9 +175,9 @@ export default function Filter({ navigation }){
                     <View style={_filter.sliderWrapper}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>Departure Flight time</Text>
-                            {/*
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>LHR - JFK</Text>
-                            */}
+                            
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>{`${travelDetail.origin_code} - ${travelDetail.destination_code}`}</Text>
+                           
                         </View>
                         <Slider
                             value={depTime}
@@ -194,20 +198,21 @@ export default function Filter({ navigation }){
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>{`${range.time_max}:00`}</Text>
                         </View>
                     </View>
-                    {/*
-                    <View style={{ height: 1.5, width: '100%', backgroundColor: '#DBDBDB' }}></View>
+                    {travel === "1"? (
+                        <>
+                        <View style={{ height: 1.5, width: '100%', backgroundColor: '#DBDBDB' }}></View>
                     <View style={_filter.sliderWrapper}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>Returning Flight time</Text>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>JFK - LHR</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>{`${travelDetail.destination_code} - ${travelDetail.origin_code} `}</Text>
                         </View>
                         <Slider
-                            value={priceRange}
-                            maximumValue={range.time_max}
-                            minimumValue={range.time_min}
-                            onValueChange={(price)=>{
-                                setPriceRange(price)
-                                console.log(price);
+                            value={depTime1}
+                            maximumValue={range.time_maxR}
+                            minimumValue={range.time_minR}
+                            onValueChange={(RTime)=>{
+                                setDepTime1(RTime)
+                                console.log(RTime);
                             }}
                             step={1}
                             allowTouchTrack
@@ -216,11 +221,14 @@ export default function Filter({ navigation }){
                             thumbStyle={{ height: 20, width: 20, backgroundColor: '#FFFFFF', elevation: 6 }}
                         />
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>0:00</Text>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>24:00</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>{`${range.time_minR}:00`}</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, textAlign: 'center' }}>{`${range.time_maxR}:00`}</Text>
                         </View>
                     </View>
-                    */}
+                    </>
+                   
+                    ):null}
+                    
                 </Card>
 
                 {/* Airlines card */}
@@ -268,7 +276,14 @@ export default function Filter({ navigation }){
                             flight: flight,
                             stops: localStop
                         })
-                        navigation.navigate('OneWayFlights')
+                        {travel === "1"? (
+                            navigation.navigate('RoundTripFlights')
+                        ): travel === "2"? (
+                            navigation.navigate('OneWayFlights')
+                        ): travel === "3"? (
+                            navigation.navigate('OneWayFlights')
+                        ): null
+                    }
                     }}>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Apply Filters</Text>
                     </TouchableOpacity>

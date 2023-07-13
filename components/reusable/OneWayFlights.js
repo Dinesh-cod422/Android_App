@@ -130,8 +130,10 @@ export default function OneWayFlights({ navigation }){
                         ...prevList,
                         metadata
                     ])
+                    console.log(flightInfo.price)
 
                     flightsListBackup.push(metadata)
+                    
                 })
                 setRange(prevRange => ({
                     ...prevRange,
@@ -142,7 +144,7 @@ export default function OneWayFlights({ navigation }){
                     price_max: Math.max(...flightsListBackup.map(item => item.price)),
                     time_min: Math.min(...flightsListBackup.map(item => item.departure_raw)),
                     time_max: Math.max(...flightsListBackup.map(item => item.departure_raw)),
-                    flight: [...new Set(flightsListBackup.map(item => item.flight_name))],
+                    flight: [ ...new Set(flightsListBackup.map(item => item.flight_name))],
                     stop: [...new Set(flightsListBackup.map(item => item.stops))]
                 }))
                 resolve('Success')
@@ -366,7 +368,7 @@ export default function OneWayFlights({ navigation }){
 
     return(
         <View style={_flights.container}>
-            <TimeLine goBack={()=>{hideBottomTab('flex'), navigation.navigate('Home')}}/>
+            <TimeLine goBack={()=>{hideBottomTab('flex'), navigation.navigate('Home'), flightsListBackup=[]}}/>
             {
                 !loading ?
                 <FlatList

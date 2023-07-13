@@ -7,16 +7,19 @@ export let globalState = createContext()
 export default function App() {
 
   let [isFont, setFont] = useState(false)
-  let [travel, setTravel] = useState('2') /* <- For travel (round-trip, one-way, multi-city) */
+  let [travel, setTravel] = useState("1") 
+  console.log(travel)/* <- For travel (round-trip, one-way, multi-city) */
   let [bottomTab, hideBottomTab] = useState('flex')
-  let [stage, setStage] = useState({ one: true, two: false, three: false })
+  let [stage, setStage] = useState({ one: false, two: false, three: false })
   let [travelDetail, setTravelDetail] = useState({
     flying_from: null,
     origin_code: null,
     flying_to: null,
     destination_code: null,
     calendar: null,
+    returnCal: null,
     date: null,
+    dateRE: null,
     passengers: 1,
     adult: 1,
     children: 0,
@@ -24,7 +27,10 @@ export default function App() {
     class_type: 'Economy',
     billname: null
   })
+  console.log(travelDetail)
   let [orides, setOrides] = useState()
+  let [orides1, setOrides1] = useState()
+  console.log(orides1)
   let [selected, setSelected] = useState()
   let [range, setRange] = useState({
     flights_count: 0,
@@ -33,7 +39,9 @@ export default function App() {
     price_min: 0,
     price_max: 0,
     time_min: 0,
+    time_minR: 0,
     time_max: 0,
+    time_maxR: 0,
     flight: [],
     stop: []
   })
@@ -74,6 +82,7 @@ export default function App() {
         stage, setStage, 
         travelDetail, setTravelDetail, 
         orides, setOrides,
+        orides1, setOrides1,
         selected, setSelected,
         range, setRange,
         reprice, setReprice,

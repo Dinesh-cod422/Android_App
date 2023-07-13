@@ -147,13 +147,14 @@ export default function Confirmation({ navigation }){
         return(
             <>
             <View style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center', justifyContent: 'space-between' }}>
-                <Image source={require('../../assets/airways.png')} style={{ width: 60, resizeMode: 'contain' }} />
-                <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>Mon, April 14, 2023</Text>
+                <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 11 }}>Departing Information</Text>
+                <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 11 }}>{travelDetail.calendar}</Text>
             </View>
             {/* Arrow */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
-                <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>LHR</Text>
-                <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14, width: '100%', justifyContent:"center", display:"flex"  }}>
+                <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 19 }}>{selected.origin}</Text>
+                <View style={{ flexDirection: 'row', width: '57%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
                     <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
                     <View style={{ position: 'absolute', left: '-5%' }}>
                         <Icon name='caret-back' type='ionicon' color='#0D3283' />
@@ -161,35 +162,36 @@ export default function Confirmation({ navigation }){
                     <View style={{ position: 'absolute', right: '-5%' }}>
                         <Icon name='caret-forward' type='ionicon' color='#0D3283' />
                     </View>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>(8h30m)</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, position: 'absolute', left: '40%', top: '80%' }}>{`(${selected.duration})`}</Text>
                 </View>
-                <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>JFK</Text>
+                <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 19 }}>{selected.destination}</Text>
             </View>
-            <View style={{ flexDirection: 'row', width: '100%' }}>
-                <View style={{ width: '50%' }}>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>7:00am</Text>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Heathrow</Text>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>0 stops</Text>
+            <View style={{ flexDirection: 'row', width: '100%', justifyContent:"center", display:"flex" }}>
+                <View style={{ width: '43%' }}>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.departure}</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.from}</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.stops} stop</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Carry-on bag included</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.carry}</Text>
                     </View>
                 </View>
-                <View style={{ width: '50%', alignItems: 'flex-end' }}>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>2:00pm</Text>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>John. F. Kennedy Intl</Text>
+                <View style={{ width: '43%', alignItems: 'flex-end' }}>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.arrival}</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.to}</Text>
                 </View>
             </View>
             
             <View style={{ width: '100%', height: 1, marginVertical: 24 }}></View>
             <View style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center', justifyContent: 'space-between' }}>
-                <Image source={require('../../assets/airways.png')} style={{ width: 60, resizeMode: 'contain' }} />
-                <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>Mon, April 14, 2023</Text>
+                <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 11 }}>Returning Information</Text>
+                <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 11 }}>{travelDetail.returnCal}</Text>
             </View>
             {/* Arrow */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
-                <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>JFK</Text>
-                <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14, width: '100%', justifyContent:"center", display:"flex"  }}>
+                <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 19 }}>{selected.originR}</Text>
+                <View style={{ flexDirection: 'row', width: '57%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
                     <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
                     <View style={{ position: 'absolute', left: '-5%' }}>
                         <Icon name='caret-back' type='ionicon' color='#0D3283' />
@@ -197,25 +199,36 @@ export default function Confirmation({ navigation }){
                     <View style={{ position: 'absolute', right: '-5%' }}>
                         <Icon name='caret-forward' type='ionicon' color='#0D3283' />
                     </View>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>(8h30m)</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, position: 'absolute', left: '40%', top: '80%' }}>{`(${selected.durationR})`}</Text>
                 </View>
-                <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>LHR</Text>
+                <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 19 }}>{selected.destinationR}</Text>
             </View>
-            <View style={{ flexDirection: 'row', width: '100%' }}>
-                <View style={{ width: '50%' }}>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>7:00am</Text>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>John. F. Kennedy Intl</Text>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>0 stops</Text>
+            <View style={{ flexDirection: 'row', width: '100%', justifyContent:"center", display:"flex" }}>
+                <View style={{ width: '43%' }}>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.departureR}</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.fromR}</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.stopsR} stops</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Carry-on bag included</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.carryR}</Text>
                     </View>
                 </View>
-                <View style={{ width: '50%', alignItems: 'flex-end' }}>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>2:00pm</Text>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Heathrow</Text>
+                <View style={{ width: '43%', alignItems: 'flex-end' }}>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.arrivalR}</Text>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 11 }}>{selected.toR}</Text>
                 </View>
+               
+                
             </View>
+            {/* <View style={{marginTop: "6%"}}>
+                <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: "#0D3283", marginVertical: "2%", marginHorizontal: "1%" }}>Seat Selection summary</Text>
+                <CardDivider color='#06122B'/>
+                <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: "row", marginTop: "-2%", marginBottom: "8%" }}>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, marginHorizontal: "1%" }}>{selected.from} to {selected.to}</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 11, marginHorizontal: "1%" }}>{selected.to}</Text>
+                </View>
+
+                </View> */}
             </>
         )
     }
@@ -295,7 +308,14 @@ export default function Confirmation({ navigation }){
                         {/* Card title starts here */}
                         <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 11 }}>Flight Departure Information</Text>
-                            <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Oneway trip</Text>
+                            {travel === "1"? (
+                                <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Round trip</Text>
+                            ):travel === "2"? (
+                                <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Oneway trip</Text>
+                            ): travel === "3"? (
+                                <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Multicity trip</Text>
+                            ) : null
+                        }
                         </View>
                         {/* Card title ends here */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 8 }}>
@@ -303,9 +323,28 @@ export default function Confirmation({ navigation }){
                                 <Text style={{ color: '#06122B', fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 4 }}>{`From: ${invoice.onboard} airport`}</Text>
                                 <Text style={{ color: '#06122B', fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 4 }}>{`To: ${invoice.offboard} airport`}</Text>
                                 <Text style={{ color: '#06122B', fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 4 }}>{`Departure by ${invoice.departure} on ${travelDetail.calendar}`}</Text>
-                                <TouchableOpacity onPress={()=>setPopup1(true)}>
-                                    <Text style={{ color: '#3B78FF', fontFamily: 'poppins-bold', fontSize: 12, marginVertical: 4 }}>View full Itinerary</Text>
-                                </TouchableOpacity>
+                                {
+                                    travel === "1" ? (
+                                        <TouchableOpacity onPress={() => setPopup1(true)}>
+                                        <Text style={{ color: '#3B78FF', fontFamily: 'poppins-bold', fontSize: 12, marginVertical: 4 }}>
+                                            View full Itinerary
+                                        </Text>
+                                        </TouchableOpacity>
+                                    ) : travel === "2" ? (
+                                        <TouchableOpacity onPress={() => setPopup1(true)}>
+                                        <Text style={{ color: '#3B78FF', fontFamily: 'poppins-bold', fontSize: 12, marginVertical: 4 }}>
+                                            View full Itinerary
+                                        </Text>
+                                        </TouchableOpacity>
+                                    ) : travel === "3" ? (
+                                        <TouchableOpacity onPress={() => setPopup1(true)}>
+                                        <Text style={{ color: '#3B78FF', fontFamily: 'poppins-bold', fontSize: 12, marginVertical: 4 }}>
+                                            View full Itinerary
+                                        </Text>
+                                        </TouchableOpacity>
+                                    ) : null
+                                    }
+
                             </View>
                             <TouchableOpacity onPress={()=>setPopup(true)}>
                                 <Text style={{ color: '#3B78FF', fontFamily: 'poppins-bold', fontSize: 12, textAlign: 'center' }}>Cancel{"\n"}Reservation?</Text>
@@ -334,7 +373,14 @@ export default function Confirmation({ navigation }){
                                                 <Card containerStyle={{borderRadius: 10, flexDirection: "column", marginTop: "-10%", zIndex:-10, marginBottom: "5%",shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
                                                     <View style={{flexDirection: "row", justifyContent: "space-between", marginTop: "5%", marginVertical: "1%" }}>
                                                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Cost summary</Text>
-                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Round trip</Text>
+                                                        {travel === "1"? (
+                                                            <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Round trip</Text>
+                                                        ):travel === "2"? (
+                                                            <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Oneway trip</Text>
+                                                        ): travel === "3"? (
+                                                            <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Multicity trip</Text>
+                                                        ) : null
+                        }
                                                     </View>
                                                     <CardDivider color='#06122B'/>
                                                     {
@@ -459,7 +505,112 @@ export default function Confirmation({ navigation }){
                                     </View>
 
                             </Modal>
-                            <Modal visible={popup1} transparent={true}>
+                            {travel === "1"? (
+                                <Modal visible={popup1} transparent={true}>
+                                    <ScrollView>
+                                        <View style={_confirmation.authCard}>
+                                            <Card containerStyle={{marginTop: "50%", borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                                            <View>
+                                                <View style={{marginLeft: "30%", marginTop: "-1%", marginVertical: "2%",flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283' }}>View full Itinerary</Text>
+                                                    <Icon name="close" type='ionicon' color='#3B78FF' size={20} fontFamily='poppins-bold' justifyContent="flex-end" width={100} onPress={() =>setPopup1(false)} />
+                                                </View>
+                                                <CardDivider color='#06122B'/>
+                                                <Text style={{textAlign: "center", fontFamily: 'poppins-bold', fontSize: 12, color: "#0D3283", marginTop:'-1%'}}>Flight information</Text>
+                                                <Card containerStyle={{borderRadius: 22, marginHorizontal: "1%", marginTop:"9%", marginBottom: "12%",shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5}}>
+                                                
+                                                <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
+                                                    <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 9 }}>Departing Information</Text>
+                                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 9 }}>{travelDetail.calendar}</Text>
+                                                </View>
+                                                {/* Arrow */}
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
+                                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 17 }}>{selected.origin}</Text>
+                                                    <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
+                                                        <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
+                                                        <View style={{ position: 'absolute', left: '-5%' }}>
+                                                            <Icon name='caret-back' type='ionicon' color='#0D3283' />
+                                                        </View>
+                                                        <View style={{ position: 'absolute', right: '-5%' }}>
+                                                            <Icon name='caret-forward' type='ionicon' color='#0D3283' />
+                                                        </View>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, position: 'absolute', left: '40%', top: '80%' }}>{`(${selected.duration})`}</Text>
+                                                    </View>
+                                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 17 }}>{selected.destination}</Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', width: '100%' }}>
+                                                    <View style={{ width: '50%' }}>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9}}>{selected.departure}</Text>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize:  9 }}>{selected.from}</Text>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize:  9 }}>{selected.stops} stop</Text>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize:  9 }}>{selected.carry}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize:  9 }}>{selected.arrival}</Text>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize:  9 }}>{selected.to}</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{ width: '100%', height: 1, marginVertical: 24 }}></View>
+                                                <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
+                                                    <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize:  9 }}>Returning Information</Text>
+                                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize:  9 }}>{travelDetail.returnCal}</Text>
+                                                </View>
+                                                {/* Arrow */}
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
+                                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 17 }}>{selected.originR}</Text>
+                                                    <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
+                                                        <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
+                                                        <View style={{ position: 'absolute', left: '-5%' }}>
+                                                            <Icon name='caret-back' type='ionicon' color='#0D3283' />
+                                                        </View>
+                                                        <View style={{ position: 'absolute', right: '-5%' }}>
+                                                            <Icon name='caret-forward' type='ionicon' color='#0D3283' />
+                                                        </View>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>{`(${selected.durationR})`}</Text>
+                                                    </View>
+                                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 17 }}>{selected.destinationR}</Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', width: '100%' }}>
+                                                    <View style={{ width: '50%' }}>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9 }}>{selected.departureR}</Text>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9 }}>{selected.fromR}</Text>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9 }}>{selected.stopsR} stops</Text>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
+                                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 9 }}>{selected.carryR}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9 }}>{selected.arrivalR}</Text>
+                                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 9 }}>{selected.toR}</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{marginTop: "6%", marginHorizontal: "-2%"}}>
+                                                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 9, color: "#0D3283", marginVertical: "2%", marginHorizontal: "1%" }}>Seat Selection summary</Text>
+                                                        <CardDivider color='#06122B'/>
+                                                        <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: "row", marginTop: "-2%", marginBottom: "8%" }}>
+                                                                <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%" }}>{selected.from} to {selected.to}</Text>
+                                                                <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%" }}>{selected.to}</Text>
+                                                        </View>
+
+                                                </View>
+                                                </Card>
+
+                                               
+                                                </View>
+                                                
+                                            </Card>
+                                            
+                                        </View>
+                                    </ScrollView>
+                                </Modal>
+                            ): travel === "2"? (
+                                <Modal visible={popup1} transparent={true}>
                                 <ScrollView>
                                     <View style={_confirmation.authCard}>
                                         <Card containerStyle={{marginTop: "50%", borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
@@ -478,7 +629,7 @@ export default function Confirmation({ navigation }){
                                                         <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 9 }}>{travelDetail.calendar}</Text>
                                                     </View>
                                                     {/* Arrow */}
-                                                    <View style={{width: '80%', flexDirection: 'row', alignItems: 'center', marginVertical: 14, justifyContent: 'space-around', marginHorizontal: "1%"  }}>
+                                                    <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', marginVertical: 14, justifyContent: 'space-around', marginHorizontal: "1%"  }}>
                                                         <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 17 }}>{selected.origin}</Text>
                                                         <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
                                                             <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
@@ -492,7 +643,7 @@ export default function Confirmation({ navigation }){
                                                         </View>
                                                         <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 17 }}>{selected.destination}</Text>
                                                     </View>
-                                                    <View style={{ flexDirection: 'row', width: '80%' }}>
+                                                    <View style={{ flexDirection: 'row', width: '100%', paddingRight:"2%" }}>
                                                         <View style={{ width: '50%' }}>
                                                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%"  }}>{selected.departure}</Text>
                                                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 9, marginHorizontal: "1%"  }}>{selected.from}</Text>
@@ -516,7 +667,7 @@ export default function Confirmation({ navigation }){
                                                     </View>
 
                                                     </View>
-                                                   
+                                                
                                                     
 
                                                 </View>
@@ -529,7 +680,9 @@ export default function Confirmation({ navigation }){
                                         
                                     </View>
                                 </ScrollView>
-                            </Modal>
+                                </Modal>
+                            ) : null
+                            }
                             <Modal visible={popup2} transparent={true}>
                                 <ScrollView>
                                     <View style={_confirmation.authCard}>
@@ -721,6 +874,7 @@ export default function Confirmation({ navigation }){
                                             
                                         </Card>
                                         
+                                        
                                     </View>
                                 </ScrollView>
                             </Modal>
@@ -735,7 +889,7 @@ export default function Confirmation({ navigation }){
 
                     </View>
                     {/* Seat summary starts here */}
-                    {/*
+                    
                     <View style={{ marginHorizontal: 12, marginVertical: 16 }}>
                         <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 11 }}>Seat Selection summary</Text>
@@ -749,7 +903,7 @@ export default function Confirmation({ navigation }){
                             <Text style={{ color: '#06122B', fontFamily: 'poppins-regular', fontSize: 12 }}>Assign at Check-in</Text>
                         </View>
                     </View>
-                    */}
+                   
                     {/* Seat summary ends here */}
                     <View style={{ marginHorizontal: 12 }}>
                         <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>

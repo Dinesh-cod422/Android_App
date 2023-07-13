@@ -13,13 +13,17 @@ export default function Home({ navigation }){
         stage, setStage, 
         travel, setTravel, 
         travelDetail, setTravelDetail, 
-        orides, setOrides } = useContext(globalState)
+        orides, setOrides,
+        orides1, setOrides1,  } = useContext(globalState)
     let [menu, setMenu] = useState('2') /* <- For Menu */
     let [calendarModal, openCalendarModal] = useState(false)
     let [searchModal, openSearchModal] = useState(false)
     let [searchFlights, setSearchFlights] = useState()
-    let [airportList, setAirportList] = useState([]) /* City_Name, Country_Name - Airport_Name (Airport_Code) */
+    console.log(searchFlights)
+    let [airportList, setAirportList] = useState([])
+     /* City_Name, Country_Name - Airport_Name (Airport_Code) */
     let [jump, setJump] = useState('from')
+    let [jumpDate, setJumpDate] = useState('from')
     let [sort, setSort] = useState(false)
     let [countModal, openCountModal] = useState(false)
 
@@ -34,7 +38,7 @@ export default function Home({ navigation }){
         color: '#3B78FF',
         borderColor: '#3B78FF',
     }
-
+    
     useEffect(() => {
         if(searchFlights !== undefined){
             axios.get(`${AirportSearchUrl}${searchFlights}`)
@@ -49,17 +53,23 @@ export default function Home({ navigation }){
     }, [searchFlights])
 
     let initCalendar = () => {
-        let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        let d = new Date()
-        d = days[d.getDay()]+', '+months[d.getMonth()]+' '+d.getDate()
-        return d
-    }
+        let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        let d = new Date();
+        d = days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + d.getDate();
+        console.log(d);
+        return d;
+        
+    };
+    
+    
     
     useEffect(() => {
         setTravelDetail(prevDetail => ({
             ...prevDetail,
-            calendar: initCalendar()
+            calendar: initCalendar(), 
+            returnCal: initCalendar(), 
         }))
     }, [])
 
@@ -90,7 +100,22 @@ export default function Home({ navigation }){
     let TravelType = (props) => {
         return(
             <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 18 }}>
-                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={()=>setTravel(props.id)}>
+                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={()=>{setTravelDetail({
+                        flying_from: null,
+                        origin_code: null,
+                        flying_to: null,
+                        destination_code: null,
+                        calendar: null,
+                        returnCal: null,
+                        date: null,
+                        returnCal: null,
+                        passengers: 1,
+                        adult: 1,
+                        children: 0,
+                        infant: 0,
+                        class_type: 'Economy',
+                        billname: null
+                    }),setTravel(props.id)}}>
                     <View style={[ 
                         {
                             width: 18, 
@@ -146,7 +171,7 @@ export default function Home({ navigation }){
                     {
                         "Origin": travelDetail.origin_code,
                         "Destination": travelDetail.destination_code,
-                        "DepartureDate": travelDetail.date
+                        "DepartureDate": travelDetail.date,
                     }
                 ],
                 "ClassType": `${travelDetail.class_type === 'Economy' ? 'E' : travelDetail.class_type === 'Business' ? 'B' : travelDetail.class_type === 'FirstClass' ? 'F' : travelDetail.class_type === 'Premium' ? 'P' : 'E'}`,
@@ -170,6 +195,50 @@ export default function Home({ navigation }){
                 "MultiCityTripdata": []
             })
             navigation.navigate('Oneway')
+        }
+        else{
+            triggerAlert()
+        }
+    }
+    let navigateToRoundWayFlights = () => {
+        setStage({ one: true, two: false, three: false })
+        let { flying_from, flying_to, calendar } = travelDetail
+        if(flying_from && flying_to !== null){
+            setOrides1({
+                "JourneyType": "R",
+                "OriginDestination": [
+                    {
+                        "Origin": travelDetail.origin_code,
+                        "Destination": travelDetail.destination_code,
+                        "DepartureDate": travelDetail.date,
+                    },
+                    {    
+                        "Origin": travelDetail.destination_code,
+                        "Destination": travelDetail.origin_code,
+                        "DepartureDate": travelDetail.dateRE,
+                    }
+                ],
+                "ClassType": `${travelDetail.class_type === 'Economy' ? 'E' : travelDetail.class_type === 'Business' ? 'B' : travelDetail.class_type === 'FirstClass' ? 'F' : travelDetail.class_type === 'Premium' ? 'P' : 'E'}`,
+                "NoOfInfant": {
+                    "Count": travelDetail.infant,
+                    "Age": {}
+                },
+                "NoOfChildren": {
+                    "Count": travelDetail.children,
+                    "Age": {}
+                },
+                "NoOfAdult": {
+                    "Count": travelDetail.adult
+                },
+                "PreferredArilines": [],
+                "PreferredCurrency": "INR",
+                "OtherInfo": {
+                    "RequestedIP": "",
+                    "TransactionId": ""
+                },
+                "MultiCityTripdata": []
+            })
+            navigation.navigate('RoundTrip')
         }
         else{
             triggerAlert()
@@ -202,74 +271,216 @@ export default function Home({ navigation }){
                         <Services title="Experiences" id="2" name="explore" style={menu === '4' ? selectionStyle : null}/>
                     </View>
                     <View style={_home.travelButtons}>
-                        <TravelType title="Round trip" id='2' style={travel === '1' ? {backgroundColor: '#3B78FF', borderWidth: 0} : null}/>
+                        <TravelType title="Round trip" id='1' style={travel === '1' ? {backgroundColor: '#3B78FF', borderWidth: 0} : null}/>
                         <TravelType title="One way" id='2' style={travel === '2' ? {backgroundColor: '#3B78FF', borderWidth: 0} : null}/>
                         <TravelType title="Multi city" id='2' style={travel === '3' ? {backgroundColor: '#3B78FF', borderWidth: 0} : null}/>
                     </View>
-                    <View style={_home.inputWrapper}>
-                        <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('from'), openSearchModal(true)}}>
-                            <Icon name='flight-takeoff' type='material' color='#3B78FF' />
-                            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_from == null ? '100%' : null }}>
-                                <TextInput placeholder='Flying from' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_from}/>
-                            </ScrollView>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('to'), openSearchModal(true)}}>
-                            <Icon name='flight-land' type='material' color='#3B78FF' />
-                            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_to == null ? '100%' : null }}>
-                                <TextInput placeholder='Flying to' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_to}/>
-                            </ScrollView>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={_home.inputBox} onPress={()=>openCalendarModal(true)}>
-                            <Icon name='calendar' type='ionicon' color='#3B78FF' />
-                            <TextInput placeholder='Calendar' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.calendar}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={_home.inputBox} onPress={()=>openCountModal(true)}>
-                            <Icon name='person' type='ionicon' color='#3B78FF' />
-                            <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
+
+                    {/* RoundTrip */}
+                    {travel === "1" && (
+                        <View style={_home.inputWrapper}>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('from'), openSearchModal(true)}}>
+                                <Icon name='flight-takeoff' type='material' color='#3B78FF' />
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_from == null ? '100%' : null }}>
+                                    <TextInput placeholder='Flying from' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_from}/>
+                                </ScrollView>
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('to'), openSearchModal(true)}}>
+                                <Icon name='flight-land' type='material' color='#3B78FF' />
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_to == null ? '100%' : null }}>
+                                    <TextInput placeholder='Flying to' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_to}/>
+                                </ScrollView>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} >
+                                <Icon name='calendar' type='ionicon' color='#3B78FF' onPress={()=>{setJumpDate('from'),openCalendarModal(true)}}/>
+                                <TextInput placeholder='Depart' style={{ width: '40%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.calendar}/>
+                                <Icon name='calendar' type='ionicon' color='#3B78FF' onPress={()=>{setJumpDate('to'),openCalendarModal(true)}}/>
+                                <TextInput placeholder='Return' style={{ width: '50%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.returnCal}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>openCountModal(true)}>
+                                <Icon name='person' type='ionicon' color='#3B78FF' />
+                                <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
+                                {/*
+                                <View style={_home.countButton}>
+                                    <Icon name='add' type='ionicon' color='#3B78FF' onPress={()=>{
+                                        setTravelDetail(prevDetail => ({
+                                            ...prevDetail,
+                                            passengers: prevDetail.passengers + 1
+                                        }))
+                                    }} />
+                                    <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View>
+                                    <Icon name='remove' type='ionicon' color='#3B78FF' onPress={()=>{
+                                        setTravelDetail(prevDetail => ({
+                                            ...prevDetail,
+                                            passengers: prevDetail.passengers > 1 ? prevDetail.passengers - 1 : 1
+                                        }))
+                                    }}/>
+                                </View>
+                                */}
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={() => setSort(true)}>
+                                <Icon name='airline-seat-recline-normal' type='material' color='#3B78FF' />
+                                <TextInput placeholder='Economy' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.class_type}/>
+                            </TouchableOpacity>
                             {/*
-                            <View style={_home.countButton}>
-                                <Icon name='add' type='ionicon' color='#3B78FF' onPress={()=>{
-                                    setTravelDetail(prevDetail => ({
-                                        ...prevDetail,
-                                        passengers: prevDetail.passengers + 1
-                                    }))
-                                }} />
-                                <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View>
-                                <Icon name='remove' type='ionicon' color='#3B78FF' onPress={()=>{
-                                    setTravelDetail(prevDetail => ({
-                                        ...prevDetail,
-                                        passengers: prevDetail.passengers > 1 ? prevDetail.passengers - 1 : 1
-                                    }))
-                                }}/>
+                            <View style={{ marginVertical: 6 }}>
+                                <TouchableOpacity style={{ flexDirection: 'row' }}>
+                                    <View style={[ 
+                                        {
+                                            width: 18, 
+                                            height: 18, 
+                                            justifyContent: 'center',
+                                            alignItem: 'center',
+                                            backgroundColor: '#3B78FF', 
+                                            borderWidth: 0
+                                        }
+                                    ]}><Icon name='checkmark' type='ionicon' color='white' size={15}/></View>
+                                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginLeft: 6 }}>Direct Flights</Text>
+                                </TouchableOpacity>
                             </View>
                             */}
-                        </TouchableOpacity>
-                        <TouchableOpacity style={_home.inputBox} onPress={() => setSort(true)}>
-                            <Icon name='airline-seat-recline-normal' type='material' color='#3B78FF' />
-                            <TextInput placeholder='Economy' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.class_type}/>
-                        </TouchableOpacity>
-                        {/*
-                        <View style={{ marginVertical: 6 }}>
-                            <TouchableOpacity style={{ flexDirection: 'row' }}>
-                                <View style={[ 
-                                    {
-                                        width: 18, 
-                                        height: 18, 
-                                        justifyContent: 'center',
-                                        alignItem: 'center',
-                                        backgroundColor: '#3B78FF', 
-                                        borderWidth: 0
-                                    }
-                                ]}><Icon name='checkmark' type='ionicon' color='white' size={15}/></View>
-                                <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginLeft: 6 }}>Direct Flights</Text>
-                            </TouchableOpacity>
                         </View>
-                        */}
-                    </View>
+                    )}
+
+                    {/* oneway */}
+                    {travel === "2" && (
+                        <View style={_home.inputWrapper}>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('from'), openSearchModal(true)}}>
+                                <Icon name='flight-takeoff' type='material' color='#3B78FF' />
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_from == null ? '100%' : null }}>
+                                    <TextInput placeholder='Flying from' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_from}/>
+                                </ScrollView>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('to'), openSearchModal(true)}}>
+                                <Icon name='flight-land' type='material' color='#3B78FF' />
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_to == null ? '100%' : null }}>
+                                    <TextInput placeholder='Flying to' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_to}/>
+                                </ScrollView>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=> {setJumpDate('from'),openCalendarModal(true)}}>
+                                <Icon name='calendar' type='ionicon' color='#3B78FF' />
+                                <TextInput placeholder='Calendar' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.calendar}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>openCountModal(true)}>
+                                <Icon name='person' type='ionicon' color='#3B78FF' />
+                                <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
+                                {/*
+                                <View style={_home.countButton}>
+                                    <Icon name='add' type='ionicon' color='#3B78FF' onPress={()=>{
+                                        setTravelDetail(prevDetail => ({
+                                            ...prevDetail,
+                                            passengers: prevDetail.passengers + 1
+                                        }))
+                                    }} />
+                                    <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View>
+                                    <Icon name='remove' type='ionicon' color='#3B78FF' onPress={()=>{
+                                        setTravelDetail(prevDetail => ({
+                                            ...prevDetail,
+                                            passengers: prevDetail.passengers > 1 ? prevDetail.passengers - 1 : 1
+                                        }))
+                                    }}/>
+                                </View>
+                                */}
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={() => setSort(true)}>
+                                <Icon name='airline-seat-recline-normal' type='material' color='#3B78FF' />
+                                <TextInput placeholder='Economy' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.class_type}/>
+                            </TouchableOpacity>
+                            {/*
+                            <View style={{ marginVertical: 6 }}>
+                                <TouchableOpacity style={{ flexDirection: 'row' }}>
+                                    <View style={[ 
+                                        {
+                                            width: 18, 
+                                            height: 18, 
+                                            justifyContent: 'center',
+                                            alignItem: 'center',
+                                            backgroundColor: '#3B78FF', 
+                                            borderWidth: 0
+                                        }
+                                    ]}><Icon name='checkmark' type='ionicon' color='white' size={15}/></View>
+                                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginLeft: 6 }}>Direct Flights</Text>
+                                </TouchableOpacity>
+                            </View>
+                            */}
+                        </View>
+                    )}
+                    
+                    {/* multicity */}
+                    {travel === "3" && (
+                        <View style={_home.inputWrapper}>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('from'), openSearchModal(true)}}>
+                                <Icon name='flight-takeoff' type='material' color='#3B78FF' />
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_from == null ? '100%' : null }}>
+                                    <TextInput placeholder='Flying from' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_from}/>
+                                </ScrollView>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('from'), openSearchModal(true)}}>
+                                <Icon name='flight-takeoff' type='material' color='#3B78FF' />
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_from == null ? '100%' : null }}>
+                                    <TextInput placeholder='Flying from' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_from}/>
+                                </ScrollView>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>{setJump('to'), openSearchModal(true)}}>
+                                <Icon name='flight-land' type='material' color='#3B78FF' />
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ width: travelDetail.flying_to == null ? '100%' : null }}>
+                                    <TextInput placeholder='Flying to' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.flying_to}/>
+                                </ScrollView>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>openCalendarModal(true)}>
+                                <Icon name='calendar' type='ionicon' color='#3B78FF' />
+                                <TextInput placeholder='Calendar' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.calendar}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={()=>openCountModal(true)}>
+                                <Icon name='person' type='ionicon' color='#3B78FF' />
+                                <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
+                                {/*
+                                <View style={_home.countButton}>
+                                    <Icon name='add' type='ionicon' color='#3B78FF' onPress={()=>{
+                                        setTravelDetail(prevDetail => ({
+                                            ...prevDetail,
+                                            passengers: prevDetail.passengers + 1
+                                        }))
+                                    }} />
+                                    <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View>
+                                    <Icon name='remove' type='ionicon' color='#3B78FF' onPress={()=>{
+                                        setTravelDetail(prevDetail => ({
+                                            ...prevDetail,
+                                            passengers: prevDetail.passengers > 1 ? prevDetail.passengers - 1 : 1
+                                        }))
+                                    }}/>
+                                </View>
+                                */}
+                            </TouchableOpacity>
+                            <TouchableOpacity style={_home.inputBox} onPress={() => setSort(true)}>
+                                <Icon name='airline-seat-recline-normal' type='material' color='#3B78FF' />
+                                <TextInput placeholder='Economy' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.class_type}/>
+                            </TouchableOpacity>
+                            {/*
+                            <View style={{ marginVertical: 6 }}>
+                                <TouchableOpacity style={{ flexDirection: 'row' }}>
+                                    <View style={[ 
+                                        {
+                                            width: 18, 
+                                            height: 18, 
+                                            justifyContent: 'center',
+                                            alignItem: 'center',
+                                            backgroundColor: '#3B78FF', 
+                                            borderWidth: 0
+                                        }
+                                    ]}><Icon name='checkmark' type='ionicon' color='white' size={15}/></View>
+                                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginLeft: 6 }}>Direct Flights</Text>
+                                </TouchableOpacity>
+                            </View>
+                            */}
+                        </View>
+                    )}
+
                     <TouchableOpacity style={_home.searchButton} onPress={() => {
                         if(travel === '1'){
                             hideBottomTab('none')
-                            navigation.navigate('RoundTrip')
+                            navigateToRoundWayFlights()
                         }
                         else if(travel === '2'){
                             hideBottomTab('none')
@@ -279,195 +490,208 @@ export default function Home({ navigation }){
                         <Text style={{ color: 'white', fontFamily: 'poppins-bold', fontSize: 20 }}>Search Flights</Text>
                     </TouchableOpacity>
                 </Card>
-            <View style={{ height:"auto",marginTop: 30, marginHorizontal: 20, display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center" }}>
-            <View style={{ width:"100%", flexDirection: "row", marginVertical: "2%", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                <View style={{ width: '85%' }}>
-                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 15 }}>Top cities to visit around United States</Text>
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Popular places where users used to travel a lot. Explore and have fun</Text>
-                </View>
-                <View style={{ marginLeft:"4%" }}>
-                    <View style={{backgroundColor: "#3B78FF", borderRadius:60,marginTop:"45%"}}>
-                    <Icon name='chevron-forward' type='ionicon' color='#FFFFFF' size={14} />
+                <View style={{ height:"auto",marginTop: 30, marginHorizontal: 20, display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center" }}>
+                <View style={{ width:"100%", flexDirection: "row", marginVertical: "2%", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                    <View style={{ width: '85%' }}>
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 15 }}>Top cities to visit around United States</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Popular places where users used to travel a lot. Explore and have fun</Text>
+                    </View>
+                    <View style={{ marginLeft:"4%" }}>
+                        <View style={{backgroundColor: "#3B78FF", borderRadius:60,marginTop:"45%"}}>
+                        <Icon name='chevron-forward' type='ionicon' color='#FFFFFF' size={14} />
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View style={{ marginVertical: 2, marginTop:"3%", marginHorizontal: 13 }}>
-                    <Image
-                        source={require('../../assets/losangeles.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row', position:"absolute", marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%"/>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Los Angeles</Text>
-                    </View>
-            </View>
+                <View style={{ marginVertical: 2, marginTop:"3%", marginHorizontal: 13 }}>
+                        <Image
+                            source={require('../../assets/losangeles.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row', position:"absolute", marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%"/>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Los Angeles</Text>
+                        </View>
+                </View>
 
-            <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
+                <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
+                    
+                        <Image
+                            source={require('../../assets/atlanta.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row', position: "absolute", marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon'size={15} color="#FFFFFF" marginTop="22%"/>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Atlanta</Text>
+                        </View>
+
+                </View>
+
+                <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
+                    
+                        <Image
+                            source={require('../../assets/sandiegoj.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row', position:"absolute", marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon'size={15} color="#FFFFFF" marginTop="22%" />
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>San Diego</Text>
+                        </View>
+
+                </View>
+                <View style={{ marginVertical: 2, marginTop:"3%",marginHorizontal: 13 }}>
                 
-                    <Image
-                        source={require('../../assets/atlanta.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
+                        <Image
+                            source={require('../../assets/sanfranciso.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row',position:"absolute", marginTop: "45%", marginLeft:"4%"}}>
+                            <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%" />
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>San Francisco</Text>
+                        </View>
 
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row', position: "absolute", marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon'size={15} color="#FFFFFF" marginTop="22%"/>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Atlanta</Text>
-                    </View>
+                </View>
 
-            </View>
-
-            <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
+                <View style={{ marginVertical: 2, marginTop:"3%",marginHorizontal: 13 }}>
                 
-                    <Image
-                        source={require('../../assets/sandiegoj.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row', position:"absolute", marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon'size={15} color="#FFFFFF" marginTop="22%" />
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>San Diego</Text>
-                    </View>
+                        <Image
+                            source={require('../../assets/newyork.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row', position: "absolute", marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%" />
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>New York</Text>
+                        </View>
 
-            </View>
-            <View style={{ marginVertical: 2, marginTop:"3%",marginHorizontal: 13 }}>
-              
-                    <Image
-                        source={require('../../assets/sanfranciso.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row',position:"absolute", marginTop: "45%", marginLeft:"4%"}}>
-                        <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%" />
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>San Francisco</Text>
-                    </View>
-
-            </View>
-
-            <View style={{ marginVertical: 2, marginTop:"3%",marginHorizontal: 13 }}>
-              
-                    <Image
-                        source={require('../../assets/newyork.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row', position: "absolute", marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%" />
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>New York</Text>
-                    </View>
-
-            </View>
-            <View style={{ marginVertical: 2, marginTop:"3%", marginHorizontal: 13 }}>
-              
-                    <Image
-                        source={require('../../assets/miami.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row',position:"absolute", marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%" />
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Miami</Text>
-                    </View>
-
-            </View>
-
-            <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
-              
-                    <Image
-                        source={require('../../assets/seattle.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row', position:'absolute', marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%"/>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Seattle</Text>
-                    </View>
+                </View>
+                <View style={{ marginVertical: 2, marginTop:"3%", marginHorizontal: 13 }}>
                 
+                        <Image
+                            source={require('../../assets/miami.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row',position:"absolute", marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%" />
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Miami</Text>
+                        </View>
 
-            </View>
+                </View>
 
-            <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
-              
-                    <Image
-                        source={require('../../assets/denver.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row', position:'absolute', marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%"/>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Denver</Text>
-                    </View>
+                <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
+                
+                        <Image
+                            source={require('../../assets/seattle.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row', position:'absolute', marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%"/>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Seattle</Text>
+                        </View>
+                    
 
-            </View>
+                </View>
 
-            <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
-              
-                    <Image
-                        source={require('../../assets/orlando.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row', position:"absolute", marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon'size={15} color="#FFFFFF" marginTop="22%"/>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Orlando</Text>
-                    </View>
+                <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
+                
+                        <Image
+                            source={require('../../assets/denver.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row', position:'absolute', marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%"/>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Denver</Text>
+                        </View>
 
-            </View>
+                </View>
 
-            <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
-              
-                    <Card.Image
-                        source={require('../../assets/dallas.jpg')} style={{
-                            height: 189,
-                            width: 339,
-                            position: "relative", borderRadius: 20
-                        }} 
-                    />
-                    <View style={{ flexDirection: 'row', position:'absolute', marginTop: "45%", marginLeft:"4%" }}>
-                        <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%" />
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Dallas</Text>
-                    </View>
+                <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
+                
+                        <Image
+                            source={require('../../assets/orlando.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row', position:"absolute", marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon'size={15} color="#FFFFFF" marginTop="22%"/>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Orlando</Text>
+                        </View>
 
-            </View>
-            </View>
+                </View>
+
+                <View style={{ marginVertical: 2,marginTop:"3%", marginHorizontal: 13 }}>
+                
+                        <Card.Image
+                            source={require('../../assets/dallas.jpg')} style={{
+                                height: 189,
+                                width: 339,
+                                position: "relative", borderRadius: 20
+                            }} 
+                        />
+                        <View style={{ flexDirection: 'row', position:'absolute', marginTop: "45%", marginLeft:"4%" }}>
+                            <Icon name='location' type='ionicon' size={15} color="#FFFFFF" marginTop="22%" />
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 16, color:"#FFFFFF" }}>Dallas</Text>
+                        </View>
+
+                </View>
+                </View>
 
         
             </ScrollView>
+
+            {/* calender  */}
             <Modal visible={calendarModal} >
                 <View style={_home.calendarView}>
-                    <Calendar onDayPress={(date)=>{
+                <Calendar onDayPress={(date)=>{
                         let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
                         let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
                         let temp = date.dateString.split('-')
                         temp = temp[1]+'-'+temp[2]+'-'+temp[0]
-                        setTravelDetail(prevDetail => ({
-                            ...prevDetail,
-                            calendar: `${days[new Date(date.dateString.toString()).getDay()]}, ${months[date.month-1]} ${date.day}`,
-                            date: temp
-                        }))
+                        if(jumpDate === "from"){
+                            setTravelDetail(prevDetail => ({
+                                ...prevDetail,
+                                calendar: `${days[new Date(date.dateString.toString()).getDay()]}, ${months[date.month-1]} ${date.day}`,
+                                date: temp
+                            }))
+                        }
+                        else if(jumpDate === "to"){
+                            setTravelDetail(prevDetail => ({
+                                ...prevDetail,
+                                returnCal: `${days[new Date(date.dateString.toString()).getDay()]}, ${months[date.month-1]} ${date.day}`,
+                                dateRE: temp
+                            }))
+                        }
                         openCalendarModal(false)
                     }}/>
                 </View>
             </Modal>
+
+            {/* Search box */}
             <Modal visible={searchModal}>
                 <View style={_home.searchView}>
                     <SearchBar placeholder="Flying from" platform="android" 
@@ -518,6 +742,8 @@ export default function Home({ navigation }){
                     </View>
                 </View>
             </Modal>
+
+            {/* type of class */}
             <Modal visible={sort} transparent={true}>
                 <View style={_home.sortCard}>
                     <Card containerStyle={{ borderRadius: 22 }}>
@@ -570,6 +796,8 @@ export default function Home({ navigation }){
                     </View>
                 </View>
             </Modal>
+
+            {/* passenger details */}
             <Modal visible={countModal} transparent={true}>
                 <View style={_home.countStyle}>
                     <Card containerStyle={{ borderRadius: 22 }}>

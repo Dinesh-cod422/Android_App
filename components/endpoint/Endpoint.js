@@ -18,7 +18,12 @@ Flight List: /flight/search/ (Post request)
         {
             "Origin": "MAA",
             "Destination": "JFK",
-            "DepartureDate": "06-10-2023"
+            "DepartureDate": "2023-09-09"
+        },
+       {
+            "Origin": "JFK",
+            "Destination": "MAA",
+            "DepartureDate": "2023-09-19"
         }
     ],
     "ClassType": "E",

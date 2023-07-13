@@ -70,18 +70,18 @@ export default function Passenger({ navigation }){
         console.log('Search ID: ' + selected.search_id);
     }, [])
 
-    let RroundTripCard = () => {
+    let RoundTripCard = () => {
         return(
-            <Card containerStyle={{ borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3 }}>
+            <Card containerStyle={{ borderRadius: 22, padding: 0 }}>
                 <View style={{ marginHorizontal: 12 }}>
                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
-                    <Image source={require('../../assets/airways.png')} style={{ width: 60, resizeMode: 'contain' }} />
+                    <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
                     <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
-                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>Mon, April 14, 2023</Text>
+                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar}</Text>
                 </View>
                 {/* Arrow */}
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
-                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>LHR</Text>
+                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{selected.origin}</Text>
                     <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
                         <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
                         <View style={{ position: 'absolute', left: '-5%' }}>
@@ -90,34 +90,34 @@ export default function Passenger({ navigation }){
                         <View style={{ position: 'absolute', right: '-5%' }}>
                             <Icon name='caret-forward' type='ionicon' color='#0D3283' />
                         </View>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>(8h30m)</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>{`(${selected.duration})`}</Text>
                     </View>
-                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>JFK</Text>
+                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{selected.destination}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', width: '100%' }}>
                     <View style={{ width: '50%' }}>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>7:00am</Text>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Heathrow</Text>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>0 stops</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.departure}</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.from}</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.stops} stop</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Carry-on bag included</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.carry}</Text>
                         </View>
                     </View>
                     <View style={{ width: '50%', alignItems: 'flex-end' }}>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>2:00pm</Text>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>John. F. Kennedy Intl</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.arrival}</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.to}</Text>
                     </View>
                 </View>
                 <View style={{ width: '100%', height: 1, marginVertical: 24 }}></View>
                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
-                    <Image source={require('../../assets/airways.png')} style={{ width: 60, resizeMode: 'contain' }} />
+                    <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
                     <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Returning Information</Text>
-                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>Mon, April 14, 2023</Text>
+                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.returnCal}</Text>
                 </View>
                 {/* Arrow */}
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
-                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>JFK</Text>
+                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{selected.originR}</Text>
                     <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
                         <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
                         <View style={{ position: 'absolute', left: '-5%' }}>
@@ -126,23 +126,23 @@ export default function Passenger({ navigation }){
                         <View style={{ position: 'absolute', right: '-5%' }}>
                             <Icon name='caret-forward' type='ionicon' color='#0D3283' />
                         </View>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>(8h30m)</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>{`(${selected.durationR})`}</Text>
                     </View>
-                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>LHR</Text>
+                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{selected.destinationR}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', width: '100%' }}>
                     <View style={{ width: '50%' }}>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>7:00am</Text>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>John. F. Kennedy Intl</Text>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>0 stops</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.departureR}</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.fromR}</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.stopsR} stops</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Carry-on bag included</Text>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.carryR}</Text>
                         </View>
                     </View>
                     <View style={{ width: '50%', alignItems: 'flex-end' }}>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>2:00pm</Text>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>Heathrow</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.arrivalR}</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{selected.toR}</Text>
                     </View>
                 </View>
                 </View>
@@ -150,13 +150,13 @@ export default function Passenger({ navigation }){
                     <View>
                         <View style={{ flexDirection: 'row', marginVertical: 2 }}>
                             <Icon name='checkmark' type='ionicon' color='#15A209' size={20}/>
-                            <Text style={{ fontFamily: 'poppins-bold', color: '#15A209', marginLeft: 4, fontSize: 12 }}>Free cancellation within 48 hours</Text>
+                            <Text style={{ fontFamily: 'poppins-bold', color: '#15A209', marginLeft: 4, fontSize: 12 }}>{selected.cancellation}</Text>
                         </View>
-                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 2 }}>Economy</Text>
+                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 2 }}>{selected.classR === 'E' ? 'Economy':'Business'}</Text>
                         <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 2 }}>Round trip per person</Text>
                     </View>
                     <View style={{ justifyContent: 'center' }}>
-                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 25, color: '#3B78FF' }}>$520</Text>
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 25, color: '#3B78FF' }}>{`$${selected.price}`}</Text>
                     </View>
                 </View>
             </Card>
@@ -212,7 +212,7 @@ export default function Passenger({ navigation }){
                         <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 2 }}>Oneway trip per person</Text>
                     </View>
                     <View style={{ justifyContent: 'center' }}>
-                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 25, color: '#3B78FF' }}>{`$${reprice.grand_total}`}</Text>
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 25, color: '#3B78FF' }}>{`$${selected.price}`}</Text>
                     </View>
                 </View>
             </Card>
@@ -446,7 +446,7 @@ export default function Passenger({ navigation }){
             <ScrollView>
                 {/* Roundtrip flight start */}
                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', marginLeft: 18, marginTop: 18 }}>Flight Summary</Text>
-                { travel === '1' ? <RroundTripCard /> : <OneViewCard /> }
+                { travel === '1' ? <RoundTripCard /> : <OneViewCard /> }
 
                 {/* Passenger details starts here */}
                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', marginLeft: 18, marginTop: 18 }}>Passenger details</Text>
@@ -505,7 +505,15 @@ export default function Passenger({ navigation }){
                 <Card containerStyle={{ borderRadius: 22,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 3}}>
                     <View style={_passenger.cardHeader}>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#0D3283' }}>Cost summary</Text>
+                        {travel === "1" && 
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#0D3283' }}>Round trip</Text>
+                        }
+                        {travel === "2" && 
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#0D3283' }}>Oneway trip</Text>
+                        }
+                        {travel === "3" && 
+                        <Text style={{ fontFamily: 'poppins-bold', fontSize: 11, color: '#0D3283' }}>Multicity </Text>
+                        }
                     </View>
                     {
                         travelDetail.adult !== 0 ?
@@ -667,35 +675,40 @@ export default function Passenger({ navigation }){
                         </TouchableOpacity>
                 </View>
             </ScrollView>
-            <Modal visible={dobModal.state} transparent={true}>
-                <View style={_passenger.dobStyle}>
-                <DateTimePicker
-                    testID="dateTimePicker"
-                    mode={"date"}
-                    value={new Date()}
-                    minimumDate={dobModal.type === "ADT" ? new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()) && dobModal.type === "CHD" ? new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) && dobModal.type === "INF" ? new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) }
-                    maximumDate={ dobModal.type === "CHD" ? new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) : dobModal.type === "INF" ? new Date() : dobModal.type === "ADT" ? new Date(new Date().getFullYear() - 13, new Date().getMonth(), new Date().getDate()) : undefined }
-                    onChange={(date) => {
-                        var d = new Date(date.nativeEvent.timestamp).getDate()
-                        var m = new Date(date.nativeEvent.timestamp).getMonth() + 1
-                        var y = new Date(date.nativeEvent.timestamp).getFullYear()
+            {dobModal.state && (
+  <View style={[_passenger.dobStyles, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
+    <View style={{ marginTop: '50%', marginRight: '37%' }}>
+      <DateTimePicker
+        testID="dateTimePicker"
+        mode="date"
+        value={new Date()}
+        minimumDate={dobModal.type === "ADT" ? new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()) && dobModal.type === "CHD" ? new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) && dobModal.type === "INF" ? new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) : new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) }
+        maximumDate={ dobModal.type === "CHD" ? new Date(new Date().getFullYear() - 2, new Date().getMonth(), new Date().getDate()) : dobModal.type === "INF" ? new Date() : dobModal.type === "ADT" ? new Date(new Date().getFullYear() - 13, new Date().getMonth(), new Date().getDate()) : undefined }
+        onChange={(event, date) => {
+          if (date !== undefined) {
+            var d = date.getDate();
+            var m = date.getMonth() + 1;
+            var y = date.getFullYear();
 
-                        d = d.toString().length === 1 ? '0'+d : d.toString()
-                        m = m.toString().length === 1 ? '0'+m : m.toString()
+            d = d.toString().length === 1 ? '0' + d : d.toString();
+            m = m.toString().length === 1 ? '0' + m : m.toString();
 
-                        let dob = y+'-'+m+'-'+d
-                        updateTextValue(dob, 'DOB', dobModal.id, dobModal.type)
-                        openDobModal(prevDob => ({
-                            ...prevDob,
-                            state: false,
-                            id: null,
-                            type: null
-                        }))
-                        console.log(dobModal);
-                    }}
-                />
-                </View>
-            </Modal>
+            let dob = y + '-' + m + '-' + d;
+            updateTextValue(dob, 'DOB', dobModal.id, dobModal.type);
+            openDobModal((prevDob) => ({
+              ...prevDob,
+              state: false,
+              id: null,
+              type: null,
+            }));
+            console.log(dobModal);
+          }
+        }}
+      />
+    </View>
+  </View>
+)}
+
             <Modal visible={ticketLoader}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <LottieView
@@ -715,6 +728,7 @@ export default function Passenger({ navigation }){
 }
 
 let _passenger = StyleSheet.create({
+    
     container: {
         width: '100%',
         height: '100%',

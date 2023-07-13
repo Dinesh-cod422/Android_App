@@ -2,9 +2,9 @@
   "expo": {
     "name": "TravelFika",
     "slug": "TravelFika",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/iconTra.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -14,20 +14,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.travelfika.TravelFika"
-    },
     "android": {
-      "package": "com.travelfika.TravelFika",
-      "versionCode": 1,
+      "package": "com.travelfika01",
+      "versionCode": 2,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/iconTra.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/iconTra.png"
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
