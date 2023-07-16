@@ -5,7 +5,7 @@ import Index from './components/router/Index'
 export let globalState = createContext()
 
 export default function App() {
-
+  let flightsListBackup = []
   let [isFont, setFont] = useState(false)
   let [travel, setTravel] = useState("1") 
   console.log(travel)/* <- For travel (round-trip, one-way, multi-city) */
@@ -88,7 +88,8 @@ export default function App() {
         reprice, setReprice,
         applyFilter, updateFilter,
         bookingId, setBookingId,
-        cardName, setCardName
+        cardName, setCardName,
+        flightsListBackup 
         }}>
         <Index />
       </globalState.Provider>

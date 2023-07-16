@@ -12,6 +12,7 @@ export default function Filter({ navigation }){
 
     let { range, setRange,
           travel, setTravel,
+          selected, setSelected,
           travelDetail, setTravelDetail,
           applyFilter, updateFilter } = useContext(globalState)
     let [tripTime, setTripTime] = useState(0)
@@ -249,6 +250,8 @@ export default function Filter({ navigation }){
                                 <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}
                                 onPress={() => setFlight(data)}>
                                     <View style={{ flexDirection: 'row' }}>
+                                    {/* <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, resizeMode: 'contain' }} /> */}
+
                                         {/*
                                         <Image source={require('../../assets/airways.png')} style={{ width: 60, resizeMode: 'contain' }} />
                                         */}
@@ -284,6 +287,7 @@ export default function Filter({ navigation }){
                             navigation.navigate('OneWayFlights')
                         ): null
                     }
+                    console.log(flight.length)
                     }}>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Apply Filters</Text>
                     </TouchableOpacity>

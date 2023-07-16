@@ -8,7 +8,6 @@ import LottieView from 'lottie-react-native'
 import { FlightSearchUrl, FlightLogo } from '../endpoint/Endpoint'
 
 
-let flightsListBackup = []
 
 
 export default function RoundTripFlights({ navigation }){
@@ -36,7 +35,7 @@ export default function RoundTripFlights({ navigation }){
         orides1, setOrides1, 
         selected, setSelected,
         range, setRange,
-        applyFilter, updateFilter } = useContext(globalState)
+        applyFilter, updateFilter, flightsListBackup } = useContext(globalState)
     let [sort, setSort] = useState(false)
     let [loading, setLoading] = useState(true)
     let [icon, setIcon] = useState(null)

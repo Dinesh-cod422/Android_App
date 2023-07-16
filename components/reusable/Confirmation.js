@@ -19,7 +19,7 @@ export default function Confirmation({ navigation }){
         stage, setStage,
         bookingId, setBookingId,
         reprice, setReprice,
-        cardName, setCardName } = useContext(globalState)
+        cardName, setCardName, flightsListBackup } = useContext(globalState)
         let [popup, setPopup] = useState(false)
         let [popup1, setPopup1] = useState(false)
         let [popup2, setPopup2] = useState(false)
@@ -133,6 +133,7 @@ export default function Confirmation({ navigation }){
                 setYess(false);
                 setPopup(false)
                 navigation.navigate('Home')
+                flightsListBackup = []
               }, 5000);
             })
             .catch((e) => {
@@ -276,9 +277,9 @@ export default function Confirmation({ navigation }){
         )
     }
 
-    return(
-        <View style={_confirmation.container}>
-            <TimeLine goBack={() => {hideBottomTab('flex'), navigation.navigate('Home')}}/>
+return(
+    <View style={_confirmation.container}>
+            <TimeLine goBack={() => { hideBottomTab('flex'), navigation.navigate('Home'), flightsListBackup = []}} /> 
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
                 {/* Selected details starts here */}
                 <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: '#0D3283', marginLeft: 18, marginTop: 18 }}>Booking Complete</Text>
@@ -365,7 +366,7 @@ export default function Confirmation({ navigation }){
                                                     <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#06122B' }}>Cancellation mode within 24hr or within specific date wii be given full refund. Otherwise charged may applied or taken from the refund amount.</Text>
                                                 </Card>
                                                 <View style={_confirmation.cancelButton}>
-                                                    <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, paddingHorizontal: 60, paddingVertical: 5,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}
+                                                    <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, paddingHorizontal: "16%", paddingVertical: 5,shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}
                                                     onPress={()=>setPopup(false)}>
                                                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Payment Summary</Text>
                                                     </TouchableOpacity>
@@ -437,15 +438,15 @@ export default function Confirmation({ navigation }){
                                                         </View>
                                                     <CardDivider color='#06122B'/>
                                                     <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#0D3283', marginTop: "-1%", marginVertical: "3%" }}>Are you sure want to cancel this ticket ?</Text>
-                                                            <View style={{flexDirection: "row", justifyContent: "space-between", width: "50%", marginVertical: "3%"}}>
-                                                            <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, width: 62, height: 25, justifyContent: "center", alignItems: "center" }}
-                                                            onPress={CancelTickets}>
-                                                                <Text style={{ fontFamily: 'poppins-bold', fontSize: 17, color: 'white' }}>Yes</Text>
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, width: 62, height: 25, justifyContent: "center", alignItems: "center" }}
-                                                            onPress={()=>setPopup(false)}>
-                                                                <Text style={{ fontFamily: 'poppins-bold', fontSize: 17, color: 'white' }}>No</Text>
-                                                            </TouchableOpacity>
+                                                        <View style={{flexDirection: "row", justifyContent: "space-between", width: "50%", marginVertical: "3%"}}>
+                                                                <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, width: "42%", height: 25, justifyContent: "center", alignItems: "center" }}
+                                                                onPress={CancelTickets}>
+                                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 17, color: 'white' }}>Yes</Text>
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, width: "42%", height: 25, justifyContent: "center", alignItems: "center" }}
+                                                                onPress={()=>setPopup(false)}>
+                                                                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 17, color: 'white' }}>No</Text>
+                                                                </TouchableOpacity>
                                                         </View>
 
                                                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, color: '#0D3283' }}>By clicking yes, I understand this will permanently cancel my ticket. If you wish to cancel some but not all passengers, please contact customer care</Text>

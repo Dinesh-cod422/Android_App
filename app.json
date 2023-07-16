@@ -4,7 +4,7 @@
     "slug": "TravelFika",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/iconTra.png",
+    "icon": "./assets/travelfikaicon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -18,12 +18,12 @@
       "package": "com.travelfika01",
       "versionCode": 2,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/iconTra.png",
+        "foregroundImage": "./assets/travelfikaicon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/iconTra.png"
+      "favicon": "./assets/travelfikaicon.png"
     },
     "runtimeVersion": {
       "policy": "sdkVersion"

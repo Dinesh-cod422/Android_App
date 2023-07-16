@@ -7,7 +7,6 @@ import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import { FlightSearchUrl, FlightLogo } from '../endpoint/Endpoint'
 
-let flightsListBackup = []
 
 export default function OneWayFlights({ navigation }){
 
@@ -16,7 +15,7 @@ export default function OneWayFlights({ navigation }){
         orides, setOrides, 
         selected, setSelected,
         range, setRange,
-        applyFilter, updateFilter } = useContext(globalState)
+        applyFilter, updateFilter, flightsListBackup } = useContext(globalState)
     let [sort, setSort] = useState(false)
     let [loading, setLoading] = useState(true)
     let [icon, setIcon] = useState(null)
