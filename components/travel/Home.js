@@ -811,119 +811,119 @@ export default function Home({ navigation }){
 
             {/* passenger details */}
             <Modal visible={countModal} transparent={true}>
-  <View style={_home.countStyle}>
-    <Card containerStyle={{ borderRadius: 22 }}>
-      <Card.Title style={{ fontSize: 18, color: '#3B78FF' }}>Passengers</Card.Title>
-      <Card.Divider />
-      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 12 }}>
-        <View style={{ width: '45%', alignItems: 'flex-start' }}>
-          <Text style={{ fontSize: 16, fontFamily: 'poppins-bold', color: '#3B78FF' }}>Adult</Text>
-          <Text style={{ fontSize: 12, fontFamily: 'poppins-regular', color: '#3B78FF' }}>Age 13 or above</Text>
-        </View>
-        <View style={{ width: '45%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <TouchableOpacity
-            style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
-            onPress={() => {
-              setTravelDetail(prevDetail => ({
-                ...prevDetail,
-                adult: prevDetail.adult > 1 ? prevDetail.adult - 1 : 1
-              }))
-            }}
-           >
-            <Icon name="remove" type="material" />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontFamily: 'poppins-bold', color: '#3B78FF' }}>{travelDetail.adult}</Text>
-          <TouchableOpacity
-            style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
-            onPress={() => {
-              setTravelDetail(prevDetail => ({
-                ...prevDetail,
-                adult: prevDetail.adult < (10 - prevDetail.children - prevDetail.infant) ? prevDetail.adult + 1 : prevDetail.adult
-              }))
-            }}
-           >
-            <Icon name="add" type="material" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 12 }}>
-        <View style={{ width: '45%', alignItems: 'flex-start' }}>
-          <Text style={{ fontSize: 16, fontFamily: 'poppins-bold', color: '#3B78FF' }}>Children</Text>
-          <Text style={{ fontSize: 12, fontFamily: 'poppins-regular', color: '#3B78FF' }}>Age 2-12</Text>
-        </View>
-        <View style={{ width: '45%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <TouchableOpacity
-            style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
-            onPress={() => {
-              setTravelDetail(prevDetail => ({
-                ...prevDetail,
-                children: prevDetail.children > 0 ? prevDetail.children - 1 : 0
-              }))
-            }}
-            >
-            <Icon name="remove" type="material" />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontFamily: 'poppins-bold', color: '#3B78FF' }}>{travelDetail.children}</Text>
-          <TouchableOpacity
-            style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
-            onPress={() => {
-              setTravelDetail(prevDetail => ({
-                ...prevDetail,
-                children: prevDetail.children < (10 - prevDetail.adult - prevDetail.infant)? prevDetail.children + 1 : prevDetail.children
-              }))
-            }}
-           >
-            <Icon name="add" type="material" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 12 }}>
-        <View style={{ width: '45%', alignItems: 'flex-start' }}>
-          <Text style={{ fontSize: 16, fontFamily: 'poppins-bold', color: '#3B78FF' }}>Infants</Text>
-          <Text style={{ fontSize: 12, fontFamily: 'poppins-regular', color: '#3B78FF' }}>Age 0-2</Text>
-        </View>
-        <View style={{ width: '45%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <TouchableOpacity
-            style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
-            onPress={() => {
-              setTravelDetail(prevDetail => ({
-                ...prevDetail,
-                infant: prevDetail.infant > 0 ? prevDetail.infant - 1 : 0
-              }))
-            }}
-            >
-            <Icon name="remove" type="material" />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontFamily: 'poppins-bold', color: '#3B78FF' }}>{travelDetail.infant}</Text>
-          <TouchableOpacity
-            style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
-            onPress={() => {
-              setTravelDetail(prevDetail => ({
-                ...prevDetail,
-                infant: prevDetail.infant < (10 - prevDetail.children - prevDetail.adult) ? prevDetail.infant + 1 : prevDetail.infant
-              }))
-            }}
-            >
-            <Icon name="add" type="material" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', marginVertical: 18 }}>
-        <TouchableOpacity
-          style={{ backgroundColor: '#3B78FF', borderRadius: 10, paddingHorizontal: 100, paddingVertical: 10 }}
-          onPress={() => {
-            setTravelDetail(prevDetail => ({
-              ...prevDetail,
-              passengers: travelDetail.adult + travelDetail.children + travelDetail.infant
-            }))
-            openCountModal(false)
-          }}>
-          <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Done</Text>
-        </TouchableOpacity>
-      </View>
-    </Card>
-  </View>
-</Modal>
+            <View style={_home.countStyle}>
+                <Card containerStyle={{ borderRadius: 22 }}>
+                <Card.Title style={{ fontSize: 18, color: '#3B78FF' }}>Passengers</Card.Title>
+                <Card.Divider />
+                <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 12 }}>
+                    <View style={{ width: '45%', alignItems: 'flex-start' }}>
+                    <Text style={{ fontSize: 16, fontFamily: 'poppins-bold', color: '#3B78FF' }}>Adult</Text>
+                    <Text style={{ fontSize: 12, fontFamily: 'poppins-regular', color: '#3B78FF' }}>Age 13 or above</Text>
+                    </View>
+                    <View style={{ width: '45%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <TouchableOpacity
+                        style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
+                        onPress={() => {
+                        setTravelDetail(prevDetail => ({
+                            ...prevDetail,
+                            adult: prevDetail.adult > 1 ? prevDetail.adult - 1 : 1
+                        }))
+                        }}
+                    >
+                        <Icon name="remove" type="material" />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 20, fontFamily: 'poppins-bold', color: '#3B78FF' }}>{travelDetail.adult}</Text>
+                    <TouchableOpacity
+                        style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
+                        onPress={() => {
+                        setTravelDetail(prevDetail => ({
+                            ...prevDetail,
+                            adult: prevDetail.adult < (10 - prevDetail.children - prevDetail.infant) ? prevDetail.adult + 1 : prevDetail.adult
+                        }))
+                        }}
+                    >
+                        <Icon name="add" type="material" />
+                    </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 12 }}>
+                    <View style={{ width: '45%', alignItems: 'flex-start' }}>
+                    <Text style={{ fontSize: 16, fontFamily: 'poppins-bold', color: '#3B78FF' }}>Children</Text>
+                    <Text style={{ fontSize: 12, fontFamily: 'poppins-regular', color: '#3B78FF' }}>Age 2-12</Text>
+                    </View>
+                    <View style={{ width: '45%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <TouchableOpacity
+                        style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
+                        onPress={() => {
+                        setTravelDetail(prevDetail => ({
+                            ...prevDetail,
+                            children: prevDetail.children > 0 ? prevDetail.children - 1 : 0
+                        }))
+                        }}
+                        >
+                        <Icon name="remove" type="material" />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 20, fontFamily: 'poppins-bold', color: '#3B78FF' }}>{travelDetail.children}</Text>
+                    <TouchableOpacity
+                        style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
+                        onPress={() => {
+                        setTravelDetail(prevDetail => ({
+                            ...prevDetail,
+                            children: prevDetail.children < (10 - prevDetail.adult - prevDetail.infant)? prevDetail.children + 1 : prevDetail.children
+                        }))
+                        }}
+                    >
+                        <Icon name="add" type="material" />
+                    </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 12 }}>
+                    <View style={{ width: '45%', alignItems: 'flex-start' }}>
+                    <Text style={{ fontSize: 16, fontFamily: 'poppins-bold', color: '#3B78FF' }}>Infants</Text>
+                    <Text style={{ fontSize: 12, fontFamily: 'poppins-regular', color: '#3B78FF' }}>Age 0-2</Text>
+                    </View>
+                    <View style={{ width: '45%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <TouchableOpacity
+                        style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
+                        onPress={() => {
+                        setTravelDetail(prevDetail => ({
+                            ...prevDetail,
+                            infant: prevDetail.infant > 0 ? prevDetail.infant - 1 : 0
+                        }))
+                        }}
+                        >
+                        <Icon name="remove" type="material" />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 20, fontFamily: 'poppins-bold', color: '#3B78FF' }}>{travelDetail.infant}</Text>
+                    <TouchableOpacity
+                        style={{ borderWidth: 1, borderRadius: 100, width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginHorizontal: 12 }}
+                        onPress={() => {
+                        setTravelDetail(prevDetail => ({
+                            ...prevDetail,
+                            infant: prevDetail.infant < (10 - prevDetail.children - prevDetail.adult) ? prevDetail.infant + 1 : prevDetail.infant
+                        }))
+                        }}
+                        >
+                        <Icon name="add" type="material" />
+                    </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', marginVertical: 18 }}>
+                    <TouchableOpacity
+                    style={{ backgroundColor: '#3B78FF', borderRadius: 10, paddingHorizontal: 100, paddingVertical: 10 }}
+                    onPress={() => {
+                        setTravelDetail(prevDetail => ({
+                        ...prevDetail,
+                        passengers: travelDetail.adult + travelDetail.children + travelDetail.infant
+                        }))
+                        openCountModal(false)
+                    }}>
+                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Done</Text>
+                    </TouchableOpacity>
+                </View>
+                </Card>
+            </View>
+            </Modal>
 
         </View>
     )
