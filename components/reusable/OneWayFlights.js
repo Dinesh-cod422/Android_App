@@ -6,8 +6,9 @@ import TimeLine from './TimeLine';
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import { FlightSearchUrl, FlightLogo } from '../endpoint/Endpoint'
+import { StatusBar } from 'expo-status-bar';
 
-
+let flightsListBackup12 = []
 export default function OneWayFlights({ navigation }){
 
     let { bottomTab, hideBottomTab, 
@@ -17,9 +18,15 @@ export default function OneWayFlights({ navigation }){
         range, setRange,
         applyFilter, updateFilter, flightsListBackup } = useContext(globalState)
     let [sort, setSort] = useState(false)
+    let [iconsf, setIconsf] = useState(false)
     let [loading, setLoading] = useState(true)
     let [icon, setIcon] = useState(null)
     let [flightInfo, setFlightInfo] = useState([])
+
+
+    // if (flightsListBackup.length === 0) {
+    //     flightsListBackup12 = [];
+    //   }
 
     let dateProcessor = (data) => {
         let d = new Date(data.toString())
@@ -132,6 +139,7 @@ export default function OneWayFlights({ navigation }){
                     console.log(flightInfo.price)
 
                     flightsListBackup.push(metadata)
+                    flightsListBackup12.push(metadata)
                     
                 })
                 setRange(prevRange => ({
@@ -144,7 +152,8 @@ export default function OneWayFlights({ navigation }){
                     time_min: Math.min(...flightsListBackup.map(item => item.departure_raw)),
                     time_max: Math.max(...flightsListBackup.map(item => item.departure_raw)),
                     flight: [ ...new Set(flightsListBackup.map(item => item.flight_name))],
-                    stop: [...new Set(flightsListBackup.map(item => item.stops))]
+                    stop: [...new Set(flightsListBackup.map(item => item.stops))],
+                    
                 }))
                 resolve('Success')
             })
@@ -155,6 +164,8 @@ export default function OneWayFlights({ navigation }){
         })
         .then((res) => {
             console.log('Backup Length: ' + flightsListBackup.length);
+            console.log('Backup Length: ' + flightsListBackup12.flight_logo);
+            console.log('Backup Length: ' + flightsListBackup12.length);
             setLoading(false)
         })
         .catch((e) => {
@@ -163,16 +174,15 @@ export default function OneWayFlights({ navigation }){
     }, [])
 
 
-    /* Apply filter */
-    useEffect(() => {
+      /* Apply filter */
+      useEffect(() => {
         /*
         tripTime: tripTime,
         priceRange: priceRange,
         depTime: depTime
         */
-
         let filterOne = []
-        flightsListBackup.map((data) => {
+        flightsListBackup12.map((data) => {
             if(data.minutes <= applyFilter.tripTime){
                 filterOne.push(data)
             }
@@ -197,6 +207,7 @@ export default function OneWayFlights({ navigation }){
             filterThree.map((data) => {
                 if(data.flight_name == applyFilter.flight){
                     filterFour.push(data)
+                    console.log("error")
                 }
             })
         }
@@ -226,6 +237,8 @@ export default function OneWayFlights({ navigation }){
             }
         }
     }, [applyFilter])
+      
+      
 
     const sortings1 = (options) => {
         let arr = [...flightInfo]; // Create a copy of the flightInfo array
@@ -255,6 +268,7 @@ export default function OneWayFlights({ navigation }){
         setFlightInfo(sortedArr);
         setIcon(options);
         setSort(false);
+
     }
 
     const sortings3 = (options) => {
@@ -275,6 +289,7 @@ export default function OneWayFlights({ navigation }){
         setFlightInfo(sortedArr);
         setIcon(options);
         setSort(false);
+
     }
       
     const sortings4 = (options) => {
@@ -295,6 +310,7 @@ export default function OneWayFlights({ navigation }){
         setFlightInfo(sortedArr);
         setIcon(options);
         setSort(false);
+
     }
 
     const sortings5= (options) => {
@@ -321,6 +337,7 @@ export default function OneWayFlights({ navigation }){
             setFlightInfo(sortedArr);
             setIcon(options);
             setSort(false);
+
     }
           
     const sortings6 = (options) => {
@@ -347,6 +364,7 @@ export default function OneWayFlights({ navigation }){
         setFlightInfo(sortedArr);
         setIcon(options);
         setSort(false);
+
     }
       
       // Function to convert time to 24-hour format
@@ -367,7 +385,8 @@ export default function OneWayFlights({ navigation }){
 
     return(
         <View style={_flights.container}>
-            <TimeLine goBack={()=>{hideBottomTab('flex'), navigation.navigate('Home'), flightsListBackup=[]}}/>
+            <StatusBar animated={true} backgroundColor="#3B78FF" />
+            <TimeLine goBack={()=>{hideBottomTab('flex'), navigation.navigate('Home'), flightsListBackup=[],flightsListBackup12 = []}}/>
             {
                 !loading ?
                 <FlatList
@@ -383,6 +402,7 @@ export default function OneWayFlights({ navigation }){
                                 <View style={{ marginHorizontal: 12 }}>
                                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Image source={{ uri: `${FlightLogo}${item.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
                                     <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar}</Text>
                                 </View>
                                 {/* Arrow */}
@@ -449,67 +469,130 @@ export default function OneWayFlights({ navigation }){
             }
 
             {/* Filter & Sort button starts here */}
-            <View style={[_flights.buttons, { display: sort ? 'none' : 'flex' }]}>
-                <TouchableOpacity style={{ backgroundColor: '#3B78FF', flexDirection: 'row', alignItems: 'center', borderRadius: 15, paddingHorizontal: 30, paddingVertical: 15, elevation: 2 }}
-                onPress={() => navigation.navigate('Filter')}>
-                    <Icon name='funnel' type='ionicon' color='white' />
-                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white', marginLeft: 10 }}>Filter</Text>
+
+            <TouchableOpacity style={{ padding: 0, shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5, bottom:30, right:10, zIndex:10, width:80, height:80, borderRadius:50, backgroundColor: '#3B78FF',display:"flex", justifyContent:"center", alignItems:"center", position:"absolute"}} onPress={() => setIconsf(true)}>
+                    <Icon name='options' type='ionicon' color='white' size={30}/>
+            </TouchableOpacity>
+            <Modal visible={iconsf} transparent={true}>
+             <TouchableOpacity onPress={() => setIconsf(false)} style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+
+            <View style={_flights.buttons}>
+                <TouchableOpacity style={{ backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12 }}
+                onPress={() => {navigation.navigate('Filter'), setIconsf(false)}}>
+                    <Icon name="funnel-outline" type='ionicon' color='#3B78FF' />
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 22, color: '#3B78FF', marginLeft: 10 }}>Filter</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: '#3B78FF', flexDirection: 'row', alignItems: 'center', borderRadius: 15, paddingHorizontal: 30, paddingVertical: 15, elevation: 2 }}
-                onPress={()=>setSort(true)}>
-                    <Icon name='filter' type='ionicon' color='white' />
-                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white', marginLeft: 10 }}>Sort</Text>
+                <TouchableOpacity style={{ backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12}}
+                onPress={()=>{setSort(true), setIconsf(false)}}>
+                    <Icon name="swap-vertical-outline" type='ionicon' color='#3B78FF' />
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 22, color: '#3B78FF', marginLeft: 10 }}>Sort</Text>
                 </TouchableOpacity>
             </View>
+            </TouchableOpacity>
+
+            </Modal>
+            
             {/* Filter & Sort button ends here */}
             {/* Sorting modal starts here */}
             <Modal visible={sort} transparent={true}>
-                <View style={_flights.sortCard}>
-                    <Card containerStyle={{ borderRadius: 22 }}>
+            <TouchableOpacity onPress={() => setSort(false)} style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center'}}>
+                <>
+                    <Card containerStyle={{ width:"80%", marginBottom:"0%", borderRadius: 22,borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                    <Text style={{width:"80%", marginLeft:"10%", marginTop:"5%",fontFamily: 'poppins-regular', fontSize: 15 }}>Sort by</Text>
+
+                        <View style={{width:"80%", marginLeft:"10%", paddingBottom:"7%"}}>
+
                         <TouchableOpacity
                         onPress={()=>sortings1("low to high")}
-                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Price low to high</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'low to high' ? '#3B78FF' : 'white'}/>
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'flex-start', borderColor: '#C9C9C9' }}>
+                            <View style={[ 
+                                {
+                                    backgroundColor : icon === 'low to high' ? '#3B78FF' : 'transparent',
+                                    borderWidth: icon === 'low to high' ? 0 : 2,
+                                    width: 18, height: 18, justifyContent: 'center', alignItem: 'center', borderRadius: 50, borderColor:"#5b5b5c" 
+                                },
+                                
+                            ]}><Icon name='checkmark' type='ionicon' color="white" size={15}/></View>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 17, color: '#0D3283', marginLeft:"8%", marginTop:"3%" }}>Price low to high</Text>
+                            {/* <Icon name='checkmark-sharp' type='ionicon' color={icon === 'low to high' ? '#3B78FF' : 'white'}/> */}
                         </TouchableOpacity>
                         <TouchableOpacity
                         onPress={()=>sortings2("high to low")}
-                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Price high to low</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'high to low' ? '#3B78FF' : 'white'}/>
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'flex-start', borderColor: '#C9C9C9' }}>
+                            <View style={[ 
+                                {
+                                    backgroundColor : icon === 'high to low' ? '#3B78FF' : 'transparent',
+                                    borderWidth: icon === 'high to low' ? 0 : 2,
+                                    width: 18, height: 18, justifyContent: 'center', alignItem: 'center', borderRadius: 50, borderColor:"#5b5b5c"
+                                },
+                                
+                            ]}><Icon name='checkmark' type='ionicon' color="white" size={15}/></View>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 17, color: '#0D3283', marginLeft:"8%", marginTop:"3%" }}>Price high to low</Text>
+                            {/* <Icon name='checkmark-sharp' type='ionicon' color={icon === 'low to high' ? '#3B78FF' : 'white'}/> */}
                         </TouchableOpacity>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                         onPress={()=>sortings3("Longest duration")}
-                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Longest duration</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'Longest duration' ? '#3B78FF' : 'white'}/>
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'flex-start', borderColor: '#C9C9C9' }}>
+                            <View style={[ 
+                                {
+                                    backgroundColor : icon === 'Longest duration' ? '#3B78FF' : 'transparent',
+                                    borderWidth: icon === 'Longest duration' ? 0 : 2,
+                                    width: 18, height: 18, justifyContent: 'center', alignItem: 'center', borderRadius: 50, borderColor:"#5b5b5c"
+                                },
+                                
+                            ]}><Icon name='checkmark' type='ionicon' color="white" size={15}/></View>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 17, color: '#0D3283', marginLeft:"8%", marginTop:"3%" }}>Longest duration</Text>
+                            {/* <Icon name='checkmark-sharp' type='ionicon' color={icon === 'low to high' ? '#3B78FF' : 'white'}/> */}
                         </TouchableOpacity>
                         <TouchableOpacity
                         onPress={()=>sortings4("Shortest duration")}
-                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Shortest duration</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'Shortest duration' ? '#3B78FF' : 'white'}/>
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'flex-start', borderColor: '#C9C9C9' }}>
+                            <View style={[ 
+                                {
+                                    backgroundColor : icon === 'Shortest duration' ? '#3B78FF' : 'transparent',
+                                    borderWidth: icon === 'Shortest duration' ? 0 : 2,
+                                    width: 18, height: 18, justifyContent: 'center', alignItem: 'center', borderRadius: 50, borderColor:"#5b5b5c" 
+                                },
+                                
+                            ]}><Icon name='checkmark' type='ionicon' color="white" size={15}/></View>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 17, color: '#0D3283', marginLeft:"8%", marginTop:"3%" }}>Shortest duration</Text>
+                            {/* <Icon name='checkmark-sharp' type='ionicon' color={icon === 'low to high' ? '#3B78FF' : 'white'}/> */}
                         </TouchableOpacity>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                         onPress={()=>sortings5("Departs first")}
-                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Departs first</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'Departs first' ? '#3B78FF' : 'white'}/>
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'flex-start', borderColor: '#C9C9C9' }}>
+                            <View style={[ 
+                                {
+                                    backgroundColor : icon === 'Departs first' ? '#3B78FF' : 'transparent',
+                                    borderWidth: icon === 'Departs first' ? 0 : 2,
+                                    width: 18, height: 18, justifyContent: 'center', alignItem: 'center', borderRadius: 50, borderColor:"#5b5b5c" 
+                                },
+                                
+                            ]}><Icon name='checkmark' type='ionicon' color="white" size={15}/></View>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 17, color: '#0D3283', marginLeft:"8%", marginTop:"3%" }}>Departs first</Text>
+                            {/* <Icon name='checkmark-sharp' type='ionicon' color={icon === 'low to high' ? '#3B78FF' : 'white'}/> */}
                         </TouchableOpacity>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                         onPress={()=>sortings6("Arrives first")}
-                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#C9C9C9' }}>
-                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#0D3283' }}>Arrives first</Text>
-                            <Icon name='checkmark-sharp' type='ionicon' color={icon === 'Arrives first' ? '#3B78FF' : 'white'}/>
+                        style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'flex-start', borderColor: '#C9C9C9' }}>
+                            <View style={[ 
+                                {
+                                    backgroundColor : icon === 'Arrives first' ? '#3B78FF' : 'transparent',
+                                    borderWidth: icon === 'Arrives first' ? 0 : 2,
+                                    width: 18, height: 18, justifyContent: 'center', alignItem: 'center', borderRadius: 50, borderColor:"#5b5b5c" 
+                                },
+                                
+                            ]}><Icon name='checkmark' type='ionicon' color="white" size={15}/></View>
+                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 17, color: '#0D3283', marginLeft:"8%", marginTop:"3%" }}>Arrives first</Text>
+                            {/* <Icon name='checkmark-sharp' type='ionicon' color={icon === 'low to high' ? '#3B78FF' : 'white'}/> */}
                         </TouchableOpacity>
+                        
+                        </View>
+
                     </Card>
-                    <View style={_flights.cancelButton}>
-                        <TouchableOpacity style={{ backgroundColor: '#3B78FF', borderRadius: 10, paddingHorizontal: 100, paddingVertical: 10 }}
-                        onPress={()=>setSort(false)}>
-                            <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Cancel</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                
+                </>
+                </TouchableOpacity>
             </Modal>
             {/* Sorting modal ends here */}
         </View>
@@ -521,6 +604,7 @@ let _flights = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
+        marginTop: "5%"
     },
     progressLine: {
         width: '100%',
@@ -530,17 +614,28 @@ let _flights = StyleSheet.create({
         justifyContent: 'center'
     },
     buttons: {
-        position: 'absolute',
-        flexDirection: 'row',
-        bottom: 20,
-        width: '100%',
-        justifyContent: 'space-around'
+        borderRadius: 22, 
+        padding: 0,
+        shadowColor: '#000', 
+        shadowOffset: { width: 0, height: 0 }, 
+        shadowOpacity: 0.8, 
+        shadowRadius: 2, 
+        elevation: 5,
+        backgroundColor: "#FFFFFF",
+        flexDirection:"column",
+        bottom: 30,
+        right:10,
+        width: '35%',
+        justifyContent: 'center',
+        alignItems:"center",
+        marginTop:"10%",
+        position:"absolute"
     },
     sortCard: {
         width: '100%',
         height: '100%',
         justifyContent: 'flex-end',
-        paddingVertical: 10
+        paddingVertical: 10,
     },
     cancelButton: {
         width: '100%',

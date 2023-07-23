@@ -12,28 +12,10 @@ import { StatusBar } from 'expo-status-bar';
 let flightsListBackup12 = []
 
 export default function RoundTripFlights({ navigation }){
-
-    // let { bottomTab, hideBottomTab, stage, setStage } = useContext(globalState)
-    // let [sort, setSort] = useState(false)
-    // let [flightInfo, setFlightInfo] = useState([
-    //     {id: 1, data: 'one'},
-    //     {id: 2, data: 'two'},
-    //     {id: 3, data: 'three'},
-    //     {id: 4, data: 'four'},
-    //     {id: 5, data: 'five'},
-    // ])
-
-    // useEffect(() => {
-    //     setStage({
-    //         one: true,
-    //         two: false,
-    //         three: false
-    //     })
-    // }, [])
     
     let { bottomTab, hideBottomTab, 
         travelDetail, setTravelDetail, 
-        orides1, setOrides1, 
+        orides2, setOrides2, 
         selected, setSelected,
         range, setRange,
         applyFilter, updateFilter, flightsListBackup } = useContext(globalState)
@@ -42,7 +24,6 @@ export default function RoundTripFlights({ navigation }){
     let [icon, setIcon] = useState(null)
     let [flightInfo, setFlightInfo] = useState([])
     let [iconsf, setIconsf] = useState(false)
-
 
     let dateProcessor = (data) => {
         let d = new Date(data.toString())
@@ -95,7 +76,7 @@ export default function RoundTripFlights({ navigation }){
     useEffect(() => {
         let loadData = new Promise((resolve, reject) => {
             let itineraryList = []
-            axios.post(FlightSearchUrl, orides1)
+            axios.post(FlightSearchUrl, orides2)
             
             .then((response) => {
                 let resultedItinerary = response.data.result.SearchResult
@@ -123,36 +104,91 @@ export default function RoundTripFlights({ navigation }){
 
                     let metadata = {
                         origin: flightsList.Itinerary[0].OriginDestination[0].OriginCode,
-                        originR: flightsList.Itinerary[1].OriginDestination[0].OriginCode,
+                        origin1: flightsList.Itinerary[1]? flightsList.Itinerary[1].OriginDestination[0].OriginCode : null,
+                        origin2: flightsList.Itinerary[2]? flightsList.Itinerary[2].OriginDestination[0].OriginCode : null,
+                        origin3: flightsList.Itinerary[3]? flightsList.Itinerary[3].OriginDestination[0].OriginCode : null,
+                        origin4: flightsList.Itinerary[4]? flightsList.Itinerary[4].OriginDestination[0].OriginCode : null,
+                        
                         destination: flightsList.Itinerary[0].OriginDestination[flightsList.Itinerary[0].OriginDestination.length-1].DestinationCode,
-                        destinationR: flightsList.Itinerary[1].OriginDestination[flightsList.Itinerary[1].OriginDestination.length-1].DestinationCode,
+                        destination1: flightsList.Itinerary[1]? flightsList.Itinerary[1].OriginDestination[flightsList.Itinerary[1].OriginDestination.length-1].DestinationCode : null,
+                        destination2: flightsList.Itinerary[2]? flightsList.Itinerary[2].OriginDestination[flightsList.Itinerary[2].OriginDestination.length-1].DestinationCode : null,
+                        destination3: flightsList.Itinerary[3]? flightsList.Itinerary[3].OriginDestination[flightsList.Itinerary[3].OriginDestination.length-1].DestinationCode : null,
+                        destination4: flightsList.Itinerary[4]? flightsList.Itinerary[4].OriginDestination[flightsList.Itinerary[4].OriginDestination.length-1].DestinationCode : null,
+                       
                         departure: dateProcessor(flightsList.Itinerary[0].OriginDestination[0].DepartureTime),
-                        departureR: dateProcessor(flightsList.Itinerary[1].OriginDestination[0].DepartureTime),
+                        departure1: flightsList.Itinerary[1]? dateProcessor(flightsList.Itinerary[1].OriginDestination[0].DepartureTime) : null,
+                        departure2: flightsList.Itinerary[2]? dateProcessor(flightsList.Itinerary[2].OriginDestination[0].DepartureTime) : null,
+                        departure3: flightsList.Itinerary[3]? dateProcessor(flightsList.Itinerary[3].OriginDestination[0].DepartureTime) : null,
+                        departure4: flightsList.Itinerary[4]? dateProcessor(flightsList.Itinerary[4].OriginDestination[0].DepartureTime) : null,
+                        
                         arrival: dateProcessor(flightsList.Itinerary[0].OriginDestination[flightsList.Itinerary[0].OriginDestination.length-1].ArrivalTime),
-                        arrivalR: dateProcessor(flightsList.Itinerary[1].OriginDestination[flightsList.Itinerary[1].OriginDestination.length-1].ArrivalTime),
+                        arrival1: flightsList.Itinerary[1]? dateProcessor(flightsList.Itinerary[1].OriginDestination[flightsList.Itinerary[1].OriginDestination.length-1].ArrivalTime) : null,
+                        arrival2: flightsList.Itinerary[2]? dateProcessor(flightsList.Itinerary[2].OriginDestination[flightsList.Itinerary[2].OriginDestination.length-1].ArrivalTime) : null,
+                        arrival3: flightsList.Itinerary[3]? dateProcessor(flightsList.Itinerary[3].OriginDestination[flightsList.Itinerary[3].OriginDestination.length-1].ArrivalTime) : null,
+                        arrival4: flightsList.Itinerary[4]? dateProcessor(flightsList.Itinerary[4].OriginDestination[flightsList.Itinerary[4].OriginDestination.length-1].ArrivalTime) : null,
+                       
                         duration: flightsList.Itinerary[0].JourneyInfo.TotalTravelDurationInMinutes,
-                        durationR: flightsList.Itinerary[1].JourneyInfo.TotalTravelDurationInMinutes,
+                        duration1: flightsList.Itinerary[1]? flightsList.Itinerary[1].JourneyInfo.TotalTravelDurationInMinutes : null,
+                        duration2: flightsList.Itinerary[2]? flightsList.Itinerary[2].JourneyInfo.TotalTravelDurationInMinutes : null,
+                        duration3: flightsList.Itinerary[3]? flightsList.Itinerary[3].JourneyInfo.TotalTravelDurationInMinutes : null,
+                        duration4: flightsList.Itinerary[4]? flightsList.Itinerary[4].JourneyInfo.TotalTravelDurationInMinutes : null,
+                        
                         minutes: Math.round(Number(flightsList.Itinerary[0].JourneyInfo.totalDurationInMinutes) / 60),
-                        minutesR: Math.round(Number(flightsList.Itinerary[1].JourneyInfo.totalDurationInMinutes) / 60),
+                        minutes1: flightsList.Itinerary[1]? Math.round(Number(flightsList.Itinerary[1].JourneyInfo.totalDurationInMinutes) / 60) : null,
+                        minutes2: flightsList.Itinerary[2]? Math.round(Number(flightsList.Itinerary[2].JourneyInfo.totalDurationInMinutes) / 60) : null,
+                        minutes3: flightsList.Itinerary[3]? Math.round(Number(flightsList.Itinerary[3].JourneyInfo.totalDurationInMinutes) / 60) : null,
+                        minutes4: flightsList.Itinerary[4]? Math.round(Number(flightsList.Itinerary[4].JourneyInfo.totalDurationInMinutes) / 60) : null,
+                       
                         from: flightsList.Itinerary[0].OriginDestination[0].OriginAirportName,
-                        fromR: flightsList.Itinerary[1].OriginDestination[0].OriginAirportName,
+                        from1: flightsList.Itinerary[1]? flightsList.Itinerary[1].OriginDestination[0].OriginAirportName : null,
+                        from2: flightsList.Itinerary[2]? flightsList.Itinerary[2].OriginDestination[0].OriginAirportName : null,
+                        from3: flightsList.Itinerary[3]? flightsList.Itinerary[3].OriginDestination[0].OriginAirportName : null,
+                        from4: flightsList.Itinerary[4]? flightsList.Itinerary[4].OriginDestination[0].OriginAirportName : null,
+                       
                         to: flightsList.Itinerary[0].OriginDestination[flightsList.Itinerary[0].OriginDestination.length-1].DestinationAirportName,
-                        toR: flightsList.Itinerary[1].OriginDestination[flightsList.Itinerary[1].OriginDestination.length-1].DestinationAirportName,
+                        to1: flightsList.Itinerary[1]? flightsList.Itinerary[1].OriginDestination[flightsList.Itinerary[1].OriginDestination.length-1].DestinationAirportName : null,
+                        to2: flightsList.Itinerary[2]? flightsList.Itinerary[2].OriginDestination[flightsList.Itinerary[2].OriginDestination.length-1].DestinationAirportName : null,
+                        to3: flightsList.Itinerary[3]? flightsList.Itinerary[3].OriginDestination[flightsList.Itinerary[3].OriginDestination.length-1].DestinationAirportName : null,
+                        to4: flightsList.Itinerary[4]? flightsList.Itinerary[4].OriginDestination[flightsList.Itinerary[4].OriginDestination.length-1].DestinationAirportName : null,
+                        
                         stops: flightsList.Itinerary[0].JourneyInfo.NoOfStop,
-                        stopsR: flightsList.Itinerary[1].JourneyInfo.NoOfStop,
+                        stops1: flightsList.Itinerary[1]? flightsList.Itinerary[1].JourneyInfo.NoOfStop : null,
+                        stops2: flightsList.Itinerary[2]? flightsList.Itinerary[2].JourneyInfo.NoOfStop : null,
+                        stops3: flightsList.Itinerary[3]? flightsList.Itinerary[3].JourneyInfo.NoOfStop : null,
+                        stops4: flightsList.Itinerary[4]? flightsList.Itinerary[4].JourneyInfo.NoOfStop : null,
+                        
                         carry: 'Carry-on bag included',
-                        carryR: 'Carry-on bag included',
+                        
                         price: Math.round(Number(flightsList.GrossFare)),
+
                         departure_raw: Number(new Date(flightsList.Itinerary[0].OriginDestination[0].DepartureTime).getHours()),
-                        departure_rawR: Number(new Date(flightsList.Itinerary[1].OriginDestination[0].DepartureTime).getHours()),
+                        departure_raw1: flightsList.Itinerary[1]? Number(new Date(flightsList.Itinerary[1].OriginDestination[0].DepartureTime).getHours()) : null,
+                        departure_raw2: flightsList.Itinerary[2]? Number(new Date(flightsList.Itinerary[2].OriginDestination[0].DepartureTime).getHours()) : null,
+                        departure_raw3: flightsList.Itinerary[3]? Number(new Date(flightsList.Itinerary[3].OriginDestination[0].DepartureTime).getHours()) : null,
+                        departure_raw4: flightsList.Itinerary[4]? Number(new Date(flightsList.Itinerary[4].OriginDestination[0].DepartureTime).getHours()) : null,
+
                         class: flightsList.Itinerary[0].OriginDestination[0].CabinClass,
-                        classR: flightsList.Itinerary[1].OriginDestination[0].CabinClass,
+                        class1: flightsList.Itinerary[1]? flightsList.Itinerary[1].OriginDestination[0].CabinClass : null,
+                        class2: flightsList.Itinerary[2]? flightsList.Itinerary[2].OriginDestination[0].CabinClass : null,
+                        class3: flightsList.Itinerary[3]? flightsList.Itinerary[3].OriginDestination[0].CabinClass : null,
+                        class4: flightsList.Itinerary[4]? flightsList.Itinerary[4].OriginDestination[0].CabinClass : null,
+                       
                         cancellation: flightsList.cancellation,
+
                         baggage: flightsList.FareBreakdown[0].BaggageAllowance,
+                        
                         flight_logo: flightsList.Itinerary[0].OriginDestination[0].MarketingAirline,
-                        flight_logoR: flightsList.Itinerary[1].OriginDestination[0].MarketingAirline,
+                        flight_logo1: flightsList.Itinerary[1]? flightsList.Itinerary[1].OriginDestination[0].MarketingAirline : null,
+                        flight_logo2: flightsList.Itinerary[2]? flightsList.Itinerary[2].OriginDestination[0].MarketingAirline : null,
+                        flight_logo3: flightsList.Itinerary[3]? flightsList.Itinerary[3].OriginDestination[0].MarketingAirline : null,
+                        flight_logo4: flightsList.Itinerary[4]? flightsList.Itinerary[4].OriginDestination[0].MarketingAirline : null,
+
                         flight_name: flightsList.Itinerary[0].OriginDestination[0].MarketingAirlineName,
-                        flight_nameR: flightsList.Itinerary[1].OriginDestination[0].MarketingAirlineName,
+                        flight_name1: flightsList.Itinerary[1]? flightsList.Itinerary[1].OriginDestination[0].MarketingAirlineName : null,
+                        flight_name2: flightsList.Itinerary[2]? flightsList.Itinerary[2].OriginDestination[0].MarketingAirlineName : null,
+                        flight_name3: flightsList.Itinerary[3]? flightsList.Itinerary[3].OriginDestination[0].MarketingAirlineName : null,
+                        flight_name4: flightsList.Itinerary[4]? flightsList.Itinerary[4].OriginDestination[0].MarketingAirlineName : null,
+               
                         itenerary_id: flightsList.IteneraryRefID,
                         total_tax: flightsList.TotalTax,
                         fare_splitup: dosplitup(),
@@ -161,6 +197,36 @@ export default function RoundTripFlights({ navigation }){
                         infant_fare: flightsList.FareBreakdown[2] !== undefined ? flightsList.FareBreakdown[2].GrossFare : null,
                         search_id: response.data.result.SearchID
                     }
+
+                    
+                    // let metadata = {
+                    //     origin: flightsList.Itinerary[0].OriginDestination[0].OriginCode,
+                    //     origin1: flightsList.Itinerary[1].OriginDestination[0].OriginCode,
+                    //     destination: flightsList.Itinerary[0].OriginDestination[flightsList.Itinerary[0].OriginDestination.length-1].DestinationCode,
+                    //     destination1: flightsList.Itinerary[1].OriginDestination[flightsList.Itinerary[1].OriginDestination.length-1].DestinationCode,
+                    //     departure: dateProcessor(flightsList.Itinerary[0].OriginDestination[0].DepartureTime),
+                    //     arrival: dateProcessor(flightsList.Itinerary[0].OriginDestination[flightsList.Itinerary[0].OriginDestination.length-1].ArrivalTime),
+                    //     duration: flightsList.Itinerary[0].JourneyInfo.TotalTravelDurationInMinutes,
+                    //     minutes: Math.round(Number(flightsList.Itinerary[0].JourneyInfo.totalDurationInMinutes) / 60),
+                    //     from: flightsList.Itinerary[0].OriginDestination[0].OriginAirportName,
+                    //     to: flightsList.Itinerary[0].OriginDestination[flightsList.Itinerary[0].OriginDestination.length-1].DestinationAirportName,
+                    //     stops: flightsList.Itinerary[0].JourneyInfo.NoOfStop,
+                    //     carry: 'Carry-on bag included',
+                    //     price: Math.round(Number(flightsList.GrossFare)),
+                    //     departure_raw: Number(new Date(flightsList.Itinerary[0].OriginDestination[0].DepartureTime).getHours()),
+                    //     class: flightsList.Itinerary[0].OriginDestination[0].CabinClass,
+                    //     cancellation: flightsList.cancellation,
+                    //     baggage: flightsList.FareBreakdown[0].BaggageAllowance,
+                    //     flight_logo: flightsList.Itinerary[0].OriginDestination[0].MarketingAirline,
+                    //     flight_name: flightsList.Itinerary[0].OriginDestination[0].MarketingAirlineName,
+                    //     itenerary_id: flightsList.IteneraryRefID,
+                    //     total_tax: flightsList.TotalTax,
+                    //     fare_splitup: dosplitup(),
+                    //     adult_fare: flightsList.FareBreakdown[0] !== undefined ? flightsList.FareBreakdown[0].GrossFare : null,
+                    //     child_fare: flightsList.FareBreakdown[1] !== undefined ? flightsList.FareBreakdown[1].GrossFare : null,
+                    //     infant_fare: flightsList.FareBreakdown[2] !== undefined ? flightsList.FareBreakdown[2].GrossFare : null,
+                    //     search_id: response.data.result.SearchID
+                    // }
 
                     setFlightInfo(prevList => [
                         ...prevList,
@@ -414,19 +480,21 @@ export default function RoundTripFlights({ navigation }){
                 !loading ?
             <FlatList
                 data={flightInfo}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <View>
-                        {/* Round-trip flights list starts here */}
+                        {/* Multicity flights list starts here */}
                         <TouchableOpacity onPress={()=>{
                             setSelected(item)
                             navigation.navigate('Baggage')
                         }}>
-                            <Card containerStyle={{ borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                            <Card key={index} containerStyle={{ borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                                
+                                {item.origin && item.destination? (
                                 <View style={{ marginHorizontal: 12 }}>
                                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
                                     <Image source={{ uri: `${FlightLogo}${item.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
                                     <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
-                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar}</Text>
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar1}</Text>
                                 </View>
                                 {/* Arrow */}
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
@@ -458,15 +526,22 @@ export default function RoundTripFlights({ navigation }){
                                         <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.to}</Text>
                                     </View>
                                 </View>
-                                <View style={{ width: '100%', height: 1, marginVertical: 24 }}></View>
+
+                                <View style={{ width: '100%', height: 1, marginVertical: 8 }}></View>
+
+                                </View>
+                                ):null}
+
+                                {item.origin1 && item.destination1? (
+                                <View style={{ marginHorizontal: 12 }}>
                                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
-                                    <Image source={{ uri: `${FlightLogo}${item.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
-                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Returning Information</Text>
-                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.returnCal}</Text>
+                                    <Image source={{ uri: `${FlightLogo}${item.flight_logo1}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar2}</Text>
                                 </View>
                                 {/* Arrow */}
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
-                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.originR}</Text>
+                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.origin1}</Text>
                                     <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
                                         <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
                                         <View style={{ position: 'absolute', left: '-5%' }}>
@@ -475,42 +550,179 @@ export default function RoundTripFlights({ navigation }){
                                         <View style={{ position: 'absolute', right: '-5%' }}>
                                             <Icon name='caret-forward' type='ionicon' color='#0D3283' />
                                         </View>
-                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>{`(${item.durationR})`}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>{`(${item.duration1})`}</Text>
                                     </View>
-                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.destinationR}</Text>
+                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.destination1}</Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', width: '100%' }}>
                                     <View style={{ width: '50%' }}>
-                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.departureR}</Text>
-                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.fromR}</Text>
-                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.stopsR} stops</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.departure1}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.from1}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.stops1} stop</Text>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                             <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
-                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.carryR}</Text>
+                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.carry}</Text>
                                         </View>
                                     </View>
                                     <View style={{ width: '50%', alignItems: 'flex-end' }}>
-                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.arrivalR}</Text>
-                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.toR}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.arrival1}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.to1}</Text>
                                     </View>
                                 </View>
+
+                                <View style={{ width: '100%', height: 1, marginVertical: 8 }}></View>
+
                                 </View>
+                                ):null}
+
+                                {item.origin2 && item.destination2? (
+                                <View style={{ marginHorizontal: 12 }}>
+                                <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
+                                    <Image source={{ uri: `${FlightLogo}${item.flight_logo2}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar3}</Text>
+                                </View>
+                                {/* Arrow */}
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
+                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.origin2}</Text>
+                                    <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
+                                        <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
+                                        <View style={{ position: 'absolute', left: '-5%' }}>
+                                            <Icon name='caret-back' type='ionicon' color='#0D3283' />
+                                        </View>
+                                        <View style={{ position: 'absolute', right: '-5%' }}>
+                                            <Icon name='caret-forward' type='ionicon' color='#0D3283' />
+                                        </View>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>{`(${item.duration2})`}</Text>
+                                    </View>
+                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.destination2}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', width: '100%' }}>
+                                    <View style={{ width: '50%' }}>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.departure2}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.from2}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.stops2} stop</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
+                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.carry}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.arrival2}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.to2}</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ width: '100%', height: 1, marginVertical: 8 }}></View>
+
+                                </View>
+                                ):null}
+
+                                {item.origin3 && item.destination3? (
+                                <View style={{ marginHorizontal: 12 }}>
+                                <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
+                                    <Image source={{ uri: `${FlightLogo}${item.flight_logo3}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar4}</Text>
+                                </View>
+                                {/* Arrow */}
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
+                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.origin3}</Text>
+                                    <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
+                                        <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
+                                        <View style={{ position: 'absolute', left: '-5%' }}>
+                                            <Icon name='caret-back' type='ionicon' color='#0D3283' />
+                                        </View>
+                                        <View style={{ position: 'absolute', right: '-5%' }}>
+                                            <Icon name='caret-forward' type='ionicon' color='#0D3283' />
+                                        </View>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>{`(${item.duration3})`}</Text>
+                                    </View>
+                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.destination3}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', width: '100%' }}>
+                                    <View style={{ width: '50%' }}>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.departure3}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.from3}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.stops3} stop</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
+                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.carry}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.arrival3}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.to3}</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ width: '100%', height: 1, marginVertical: 8 }}></View>
+
+                                </View>
+                                ): null}
+
+                                {item.origin4 && item.destination4? (
+                                <View style={{ marginHorizontal: 12 }}>
+                                <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-around' }}>
+                                    <Image source={{ uri: `${FlightLogo}${item.flight_logo4}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
+                                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar5}</Text>
+                                </View>
+                                {/* Arrow */}
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 14 }}>
+                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.origin4}</Text>
+                                    <View style={{ flexDirection: 'row', width: '70%', height: '60%', alignItems: 'center', marginVertical: 18, marginHorizontal: 12 }}>
+                                        <View style={{width: '100%', height: 2, backgroundColor: '#0D3283'}} />
+                                        <View style={{ position: 'absolute', left: '-5%' }}>
+                                            <Icon name='caret-back' type='ionicon' color='#0D3283' />
+                                        </View>
+                                        <View style={{ position: 'absolute', right: '-5%' }}>
+                                            <Icon name='caret-forward' type='ionicon' color='#0D3283' />
+                                        </View>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, position: 'absolute', left: '40%', top: '80%' }}>{`(${item.duration4})`}</Text>
+                                    </View>
+                                    <Text style={{ fontFamily: 'poppins-bold', color: '#0D3283', fontSize: 20 }}>{item.destination4}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', width: '100%' }}>
+                                    <View style={{ width: '50%' }}>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.departure4}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.from4}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.stops4} stop</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Icon name='luggage' type='material' color='#3B78FF' size={14}/>
+                                            <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.carry}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.arrival4}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{item.to4}</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ width: '100%', height: 1, marginVertical: 8 }}></View>
+
+                                </View>
+                                ): null}
+                                
+
+
                                 <View style={{ width: '100%', backgroundColor: '#E7EDFB', marginTop: 20, paddingTop: 10, paddingHorizontal: 12, flexDirection: 'row', justifyContent: 'space-between', borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
                                     <View>
                                         <View style={{ flexDirection: 'row', marginVertical: 2 }}>
                                             <Icon name='checkmark' type='ionicon' color='#15A209' size={20}/>
                                             <Text style={{ fontFamily: 'poppins-bold', color: '#15A209', marginLeft: 4, fontSize: 12 }}>{item.cancellation}</Text>
                                         </View>
-                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 2 }}>{item.classR === 'E' ? 'Economy':'Business'}</Text>
+                                        <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 2 }}>{item.class === 'E' ? 'Economy':'Business'}</Text>
                                         <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginVertical: 2 }}>Round trip per person</Text>
                                     </View>
                                     <View style={{ justifyContent: 'center' }}>
                                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 25, color: '#3B78FF' }}>{`$${item.price}`}</Text>
                                     </View>
                                 </View>
+                                
                             </Card>
                         </TouchableOpacity>
-                        {/* Round-trip flights list ends here */}
+                        {/* Multicity flights list ends here */}
                     </View>
                 )}
                 keyExtractor={item => item.id}

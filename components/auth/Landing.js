@@ -1,9 +1,11 @@
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 export default function Landing({ navigation }){
 
     return(
         <View style={_landing.container}>
+            <StatusBar animated={true} backgroundColor="#2d69ad" />
             <View style={_landing.parentCurve}>
                 <View style={_landing.childCurve}>
                     <Image

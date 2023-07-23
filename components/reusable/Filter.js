@@ -3,10 +3,10 @@ import { Icon, Card, Slider } from '@rneui/themed';
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { globalState } from '../../App';
 import { FlightLogo } from '../endpoint/Endpoint';
+import { StatusBar } from 'expo-status-bar';
 
 //source={{ uri: `${FlightLogo}${item.flight_logo}.gif` }}
 
-let flight = null
 
 export default function Filter({ navigation }){
 
@@ -14,7 +14,7 @@ export default function Filter({ navigation }){
           travel, setTravel,
           selected, setSelected,
           travelDetail, setTravelDetail,
-          applyFilter, updateFilter } = useContext(globalState)
+          applyFilter, updateFilter, flightsListBackup } = useContext(globalState)
     let [tripTime, setTripTime] = useState(0)
     let [priceRange, setPriceRange] = useState(0)
     let [depTime, setDepTime] = useState(0)
@@ -32,15 +32,26 @@ export default function Filter({ navigation }){
         setDepTime1(range.time_maxR)
 
         console.log(' Stops: ' + range.stop)
+        console.log(' Stops: ' + range.flight)
     }, [])
 
     return(
         <View style={_filter.container}>
+            <StatusBar animated={true} backgroundColor="#3B78FF" />
             <View style={_filter.header}>
-                <TouchableOpacity style={{ marginHorizontal: 16 }} onPress={()=>navigation.navigate('OneWayFlights')}>
+                <TouchableOpacity style={{ marginHorizontal: 16 }}
+                 onPress={()=>{
+                        travel === "1"? (
+                            navigation.navigate('RoundTripFlights')
+                        ): travel === "2"? (
+                            navigation.navigate('OneWayFlights')
+                        ): travel === "3"? (
+                            navigation.navigate('MulticityFlights')
+                        ): null
+                    }}>
                     <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: 'white' }}>Cancel</Text>
                 </TouchableOpacity>
-                <Text style={{ fontFamily: 'poppins-bold', fontSize: 22, color: 'white' }}>Filter</Text>
+                <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: 'white' }}>Filter</Text>
                 <TouchableOpacity style={{ marginHorizontal: 16 }} onPress={()=>{
                     setTripTime(range.trip_max)
                     setPriceRange(range.price_max)
@@ -59,7 +70,7 @@ export default function Filter({ navigation }){
                         <TouchableOpacity>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Trip time</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>setTripTime(range.trip_min)}>
+                        <TouchableOpacity onPress={()=>setTripTime(range.trip_max)}>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Reset</Text>
                         </TouchableOpacity>
                     </View>
@@ -100,14 +111,14 @@ export default function Filter({ navigation }){
                         <View>
                             {
                                 range.stop.map((ele, i) => (
-                                    <>
+                                    <View key={i}>
                                         <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}
-                                        onPress={()=>setLocalStop(ele)}>
+                                        onPress={()=>{setLocalStop(ele), console.log(ele)}}>
                                             <Text style={{ fontFamily: 'poppins-regular', fontSize: 12 }}>{ele} stop</Text>
                                             <Icon name='checkmark-sharp' type='ionicon' color={localStop === ele ? '#3B78FF' : 'white'} />
                                         </TouchableOpacity>
                                         <View style={{ height: 1.5, width: '100%', backgroundColor: '#DBDBDB' }}></View>
-                                    </>
+                                    </View>
                                 ))
                             }
                             {/*
@@ -137,7 +148,7 @@ export default function Filter({ navigation }){
                         <TouchableOpacity>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Price range</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>setPriceRange(range.price_min)}>
+                        <TouchableOpacity onPress={()=>setPriceRange(range.price_max)}>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Reset</Text>
                         </TouchableOpacity>
                     </View>
@@ -169,7 +180,7 @@ export default function Filter({ navigation }){
                         <TouchableOpacity>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Flight timings</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>setDepTime(range.time_min)}>
+                        <TouchableOpacity onPress={()=>setDepTime(range.time_max)}>
                             <Text style={{ fontFamily: 'poppins-bold', fontSize: 12, color: '#0D3283' }}>Reset</Text>
                         </TouchableOpacity>
                     </View>
@@ -246,11 +257,11 @@ export default function Filter({ navigation }){
                     <View>
                         {
                             flightsList.current.map((data, i) => (
-                            <>
+                            <View key={i}>
                                 <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}
-                                onPress={() => setFlight(data)}>
+                                onPress={() => {setFlight(data), console.log(data)}}>
                                     <View style={{ flexDirection: 'row' }}>
-                                    {/* <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, resizeMode: 'contain' }} /> */}
+                                    {/* <Image source={{ uri: `${FlightLogo}${data.flight_logo}.gif.gif` }} style={{ width: 60, resizeMode: 'contain' }} /> */}
 
                                         {/*
                                         <Image source={require('../../assets/airways.png')} style={{ width: 60, resizeMode: 'contain' }} />
@@ -260,7 +271,7 @@ export default function Filter({ navigation }){
                                     <Icon name='checkmark-sharp' type='ionicon' color={flight === data ? '#3B78FF' : 'white'} />
                                 </TouchableOpacity>
                                 <View style={{ height: 1.5, width: '100%', backgroundColor: '#DBDBDB' }} key={i}></View>
-                            </>
+                            </View>
                             ))
                         }
                         <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: 45, alignItems: 'center', justifyContent: 'space-between' }}>
@@ -279,15 +290,24 @@ export default function Filter({ navigation }){
                             flight: flight,
                             stops: localStop
                         })
+                        console.log(applyFilter)
                         {travel === "1"? (
                             navigation.navigate('RoundTripFlights')
                         ): travel === "2"? (
                             navigation.navigate('OneWayFlights')
                         ): travel === "3"? (
-                            navigation.navigate('OneWayFlights')
+                            navigation.navigate('MulticityFlights')
                         ): null
                     }
-                    console.log(flight.length)
+                    console.log(flight); // Check the value of flight
+
+                    if (flight !== null) {
+                    console.log(flight.length);
+                    }
+
+                    console.log(flight?.length);
+                    console.log("error")
+
                     }}>
                         <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white' }}>Apply Filters</Text>
                     </TouchableOpacity>
@@ -301,11 +321,13 @@ let _filter = StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        marginTop:"4%"
     },
     header: {
         width: '100%',
         height: '5%',
+        paddingTop:"3%",
         flexDirection: 'row',
         backgroundColor: '#3B78FF',
         justifyContent: 'space-between',
