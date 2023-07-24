@@ -470,22 +470,22 @@ export default function OneWayFlights({ navigation }){
 
             {/* Filter & Sort button starts here */}
 
-            <TouchableOpacity style={{ padding: 0, shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5, bottom:30, right:10, zIndex:10, width:80, height:80, borderRadius:50, backgroundColor: '#3B78FF',display:"flex", justifyContent:"center", alignItems:"center", position:"absolute"}} onPress={() => setIconsf(true)}>
+            <TouchableOpacity style={{ padding: 0, shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5, bottom:25, right:10, zIndex:10, width:60, height:60, borderRadius:50, backgroundColor: '#3B78FF',display:"flex", justifyContent:"center", alignItems:"center", position:"absolute"}} onPress={() => setIconsf(true)}>
                     <Icon name='options' type='ionicon' color='white' size={30}/>
             </TouchableOpacity>
             <Modal visible={iconsf} transparent={true}>
              <TouchableOpacity onPress={() => setIconsf(false)} style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 
             <View style={_flights.buttons}>
-                <TouchableOpacity style={{ backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12 }}
+                <TouchableOpacity style={{ backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 7 }}
                 onPress={() => {navigation.navigate('Filter'), setIconsf(false)}}>
-                    <Icon name="funnel-outline" type='ionicon' color='#3B78FF' />
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 22, color: '#3B78FF', marginLeft: 10 }}>Filter</Text>
+                    <Icon name="funnel-outline" type='ionicon' color='#3B78FF' size={21} />
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#3B78FF', marginLeft: 10 }}>Filter</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 12}}
+                <TouchableOpacity style={{ backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 7}}
                 onPress={()=>{setSort(true), setIconsf(false)}}>
-                    <Icon name="swap-vertical-outline" type='ionicon' color='#3B78FF' />
-                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 22, color: '#3B78FF', marginLeft: 10 }}>Sort</Text>
+                    <Icon name="swap-vertical-outline" type='ionicon' color='#3B78FF' size={21}/>
+                    <Text style={{ fontFamily: 'poppins-regular', fontSize: 20, color: '#3B78FF', marginLeft: 10 }}>Sort</Text>
                 </TouchableOpacity>
             </View>
             </TouchableOpacity>
@@ -497,7 +497,7 @@ export default function OneWayFlights({ navigation }){
             <Modal visible={sort} transparent={true}>
             <TouchableOpacity onPress={() => setSort(false)} style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center'}}>
                 <>
-                    <Card containerStyle={{ width:"80%", marginBottom:"0%", borderRadius: 22,borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
+                    <Card containerStyle={{ width:"80%", marginBottom:"0%", borderRadius: 22, padding: 0,shadowColor: '#000', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.8, shadowRadius: 2, elevation: 5 }}>
                     <Text style={{width:"80%", marginLeft:"10%", marginTop:"5%",fontFamily: 'poppins-regular', fontSize: 15 }}>Sort by</Text>
 
                         <View style={{width:"80%", marginLeft:"10%", paddingBottom:"7%"}}>
@@ -623,9 +623,9 @@ let _flights = StyleSheet.create({
         elevation: 5,
         backgroundColor: "#FFFFFF",
         flexDirection:"column",
-        bottom: 30,
+        bottom: 25,
         right:10,
-        width: '35%',
+        width: '30%',
         justifyContent: 'center',
         alignItems:"center",
         marginTop:"10%",

@@ -657,6 +657,7 @@ export default function Passenger({ navigation }){
                                     setBookingId(booking_id)
                                     setTicketLoader(false)
                                     navigation.navigate('Confirmation')
+                                    hideBottomTab("flex")
                                     }
                                 
                                 checkpoint = false

@@ -13,7 +13,7 @@ export default function FikaTab() {
   let { bottomTab, hideBottomTab } = useContext(globalState)
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={{ headerShown: false }} hideBottomTab={bottomTab}>
       <Tab.Screen name="Booking" component={Booking}         
       options={{
           tabBarLabel: 'Home',
@@ -25,10 +25,10 @@ export default function FikaTab() {
             />
           ),
           tabBarStyle: {
-            display: `${'none'}`
+            display: `${bottomTab}`
           }
       }}/>
-      <Tab.Screen name="Trips" component={Flights}         
+      <Tab.Screen name="Trips" component={Home}         
       options={{
           tabBarLabel: 'Trips',
           tabBarIcon: () => (

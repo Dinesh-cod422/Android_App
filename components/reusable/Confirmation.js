@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput, Modal } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal } from 'react-native'
 import { Icon, Card } from '@rneui/themed';
 import React, { useEffect, useState, useContext } from 'react'
 import { globalState } from '../../App';
@@ -241,6 +241,7 @@ export default function Confirmation({ navigation }){
                 <View style={{ marginHorizontal: 12 }}>
                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 60, height: 40 }} />
+                    <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
                     <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 12 }}>{travelDetail.calendar}</Text>
                 </View>
                 {/* Arrow */}
@@ -853,6 +854,7 @@ return(
                                                 <View >
                                                     <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 8, borderColor: '#00000021', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: "1%"  }}>
                                                         <Image source={{ uri: `${FlightLogo}${selected.flight_logo}.gif.gif` }} style={{ width: 50, height: 30 }} />
+                                                        <Text style={{ color: '#0D3283', fontFamily: 'poppins-bold', fontSize: 12 }}>Departing Information</Text>
                                                         <Text style={{ color: '#0D3283', fontFamily: 'poppins-regular', fontSize: 9 }}>{travelDetail.calendar}</Text>
                                                     </View>
                                                     {/* Arrow */}
@@ -1490,20 +1492,7 @@ return(
                 </View>
                 {/* FAQ ends here */}
             </ScrollView>
-            <View style={_confirmation.buttons}>
-                <TouchableOpacity style={{ backgroundColor: '#3B78FF', flexDirection: 'row', alignItems: 'center', borderRadius: 15, paddingHorizontal: 30, paddingVertical: 15, elevation: 2 }}
-                onPress={()=>{
-                    hideBottomTab('flex')
-                    navigation.navigate('Home')
-                }}>
-                    <Icon name='home' type='ionicon' color='white' />
-                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white', marginLeft: 10 }}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: '#3B78FF', flexDirection: 'row', alignItems: 'center', borderRadius: 15, paddingHorizontal: 30, paddingVertical: 15, elevation: 2 }}>
-                    <Icon name='luggage' type='material' color='white' />
-                    <Text style={{ fontFamily: 'poppins-bold', fontSize: 20, color: 'white', marginLeft: 10 }}>Trip</Text>
-                </TouchableOpacity>
-            </View>
+            
         </View>
     )
 }
@@ -1515,14 +1504,14 @@ let _confirmation = StyleSheet.create({
         backgroundColor: 'white',
         flex: 1,
     },
-    cardHeader: {
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderBottomWidth: 1,
-        borderColor: '#DBDBDB',
-        paddingBottom: 8
-    },
+    // cardHeader: {
+    //     width: '100%',
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     borderBottomWidth: 1,
+    //     borderColor: '#DBDBDB',
+    //     paddingBottom: 8
+    // },
     options: {
         flexDirection: 'row',
         marginHorizontal: 17,

@@ -40,6 +40,8 @@ export default function Home({ navigation }){
     const [searchPlaceholder, setSearchPlaceholder] = useState('Flying from');
     const [selectedFromDate, setSelectedFromDate] = useState(null);
     let [loading, setLoading] = useState(true)
+    let [direct, setDirect] = useState(false)
+    let [plusIcon, setPlusIcon] = useState(false)
 
 
 
@@ -252,7 +254,7 @@ export default function Home({ navigation }){
                        infant: 0,
                        class_type: 'Economy',
                        billname: null,
-                    }), setMenuss([]),setTravel(props.id)}}>
+                    }), setMenuss([]),setTravel(props.id), setDirect(direct)}}>
                     <View style={[ 
                         {
                             width: 18, 
@@ -376,6 +378,8 @@ export default function Home({ navigation }){
                 "MultiCityTripdata": []
             })
             navigation.navigate('RoundTrip')
+            hideBottomTab("none")
+
         }
         else{
             triggerAlert()
@@ -454,6 +458,7 @@ export default function Home({ navigation }){
 
               if (OriginDestination.length > 0) {
                 navigation.navigate('Multicity');
+                hideBottomTab("none")
                 console.log("Moving to Multicity");
               } else {
                 triggerAlert();
@@ -525,48 +530,61 @@ export default function Home({ navigation }){
                             <Icon name='calendar' type='ionicon' color='#3B78FF' onPress={() => openCalendar('to')} />
                             <TextInput placeholder='Return' style={{ width: '50%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.returnCal} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={_home.inputBox} onPress={()=>openCountModal(true)}>
-                                <Icon name='person' type='ionicon' color='#3B78FF' />
-                                <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
-                                {/*
-                                <View style={_home.countButton}>
-                                    <Icon name='add' type='ionicon' color='#3B78FF' onPress={()=>{
-                                        setTravelDetail(prevDetail => ({
-                                            ...prevDetail,
-                                            passengers: prevDetail.passengers + 1
-                                        }))
-                                    }} />
-                                    <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View>
-                                    <Icon name='remove' type='ionicon' color='#3B78FF' onPress={()=>{
-                                        setTravelDetail(prevDetail => ({
-                                            ...prevDetail,
-                                            passengers: prevDetail.passengers > 1 ? prevDetail.passengers - 1 : 1
-                                        }))
-                                    }}/>
-                                </View>
-                                */}
+                            <TouchableOpacity style={_home.inputBox} onPress={() => openCountModal(true)}>
+                                    <Icon name='person' type='ionicon' color='#3B78FF' />
+                                    <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
+                                    <View style={{flexDirection: "row", right: 8, width:"27%", justifyContent: 'space-around', paddingHorizontal: 6, borderColor: '#00000029', position:"absolute"}}>
+                                    
+                                    <View style={_home.countButton}>
+                                        {/* <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View> */}
+                                        <Icon name='remove-circle' type='ionicon' color={plusIcon && travelDetail.passengers !== 1 ? '#3B78FF' : "#6f6f70"} size={28} onPress={() => {
+                                            setTravelDetail(prevDetail => ({
+                                                ...prevDetail,
+                                                passengers: prevDetail.adult > 1 ? prevDetail.adult - 1 : 1,
+                                                adult: prevDetail.adult > 1 ? prevDetail.adult - 1 : 1,
+                                                children: 0,
+                                                infant: 0
+                                            }))
+                                        }} />
+                                    </View>
+
+                                    <View style={_home.countButton}>
+                                        <Icon name='add-circle' type='ionicon' color='#3B78FF' size={28} onPress={() => {
+                                            setTravelDetail(prevDetail => ({
+                                                ...prevDetail,
+                                                passengers: prevDetail.adult < 10 ? prevDetail.adult + 1 : prevDetail.adult,
+                                                adult: prevDetail.adult < 10 ? prevDetail.adult + 1 : prevDetail.adult,
+                                                children: 0,
+                                                infant: 0
+                                            }))
+                                            setPlusIcon(true)
+
+                                        }} />
+                                     </View>
+                                    </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={_home.inputBox} onPress={() => setSort(true)}>
                                 <Icon name='airline-seat-recline-normal' type='material' color='#3B78FF' />
                                 <TextInput placeholder='Economy' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.class_type}/>
                             </TouchableOpacity>
-                            {/*
+                            
                             <View style={{ marginVertical: 6 }}>
-                                <TouchableOpacity style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity style={{ flexDirection: 'row', marginHorizontal: "2%" }} onPress={() => {setDirect(!direct)}}>
                                     <View style={[ 
                                         {
-                                            width: 18, 
-                                            height: 18, 
+                                            width: 16, 
+                                            height: 16, 
                                             justifyContent: 'center',
                                             alignItem: 'center',
-                                            backgroundColor: '#3B78FF', 
-                                            borderWidth: 0
+                                            backgroundColor: direct ? 'white' : '#3B78FF',
+                                            borderWidth: direct ? 1 : 0,
+                                            borderColor:"#5b5b5c"
                                         }
                                     ]}><Icon name='checkmark' type='ionicon' color='white' size={15}/></View>
                                     <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginLeft: 6 }}>Direct Flights</Text>
                                 </TouchableOpacity>
                             </View>
-                            */}
+                           
                         </View>
                     )}
 
@@ -589,26 +607,38 @@ export default function Home({ navigation }){
                                 <Icon name='calendar' type='ionicon' color='#3B78FF' />
                                 <TextInput placeholder='Departure date' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.calendar}/>
                             </TouchableOpacity>
-                            <TouchableOpacity style={_home.inputBox} onPress={()=>openCountModal(true)}>
-                                <Icon name='person' type='ionicon' color='#3B78FF' />
-                                <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
-                                {/*
-                                <View style={_home.countButton}>
-                                    <Icon name='add' type='ionicon' color='#3B78FF' onPress={()=>{
-                                        setTravelDetail(prevDetail => ({
-                                            ...prevDetail,
-                                            passengers: prevDetail.passengers + 1
-                                        }))
-                                    }} />
-                                    <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View>
-                                    <Icon name='remove' type='ionicon' color='#3B78FF' onPress={()=>{
-                                        setTravelDetail(prevDetail => ({
-                                            ...prevDetail,
-                                            passengers: prevDetail.passengers > 1 ? prevDetail.passengers - 1 : 1
-                                        }))
-                                    }}/>
-                                </View>
-                                */}
+                            <TouchableOpacity style={_home.inputBox} onPress={() => openCountModal(true)}>
+                                    <Icon name='person' type='ionicon' color='#3B78FF' />
+                                    <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
+                                    <View style={{flexDirection: "row", right: 8, width:"27%", justifyContent: 'space-around', paddingHorizontal: 6, borderColor: '#00000029', position:"absolute"}}>
+                                    
+                                    <View style={_home.countButton}>
+                                        {/* <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View> */}
+                                        <Icon name='remove-circle' type='ionicon' color={plusIcon && travelDetail.passengers !== 1 ? '#3B78FF' : "#6f6f70"} size={28} onPress={() => {
+                                            setTravelDetail(prevDetail => ({
+                                                ...prevDetail,
+                                                passengers: prevDetail.adult > 1 ? prevDetail.adult - 1 : 1,
+                                                adult: prevDetail.adult > 1 ? prevDetail.adult - 1 : 1,
+                                                children: 0,
+                                                infant: 0
+                                            }))
+                                        }} />
+                                    </View>
+
+                                    <View style={_home.countButton}>
+                                        <Icon name='add-circle' type='ionicon' color='#3B78FF' size={28} onPress={() => {
+                                            setTravelDetail(prevDetail => ({
+                                                ...prevDetail,
+                                                passengers: prevDetail.adult < 10 ? prevDetail.adult + 1 : prevDetail.adult,
+                                                adult: prevDetail.adult < 10 ? prevDetail.adult + 1 : prevDetail.adult,
+                                                children: 0,
+                                                infant: 0
+                                            }))
+                                            setPlusIcon(true)
+
+                                        }} />
+                                     </View>
+                                    </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={_home.inputBox} onPress={() => setSort(true)}>
                                 <Icon name='airline-seat-recline-normal' type='material' color='#3B78FF' />
@@ -656,21 +686,14 @@ export default function Home({ navigation }){
                             </TouchableOpacity>
 
 
-                                <TouchableOpacity style={_home.inputBox} onPress={() => openCountModal(true)}>
+                            <TouchableOpacity style={_home.inputBox} onPress={() => openCountModal(true)}>
                                     <Icon name='person' type='ionicon' color='#3B78FF' />
                                     <TextInput placeholder='passenger' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.passengers.toString()} />
+                                    <View style={{flexDirection: "row", right: 8, width:"27%", justifyContent: 'space-around', paddingHorizontal: 6, borderColor: '#00000029', position:"absolute"}}>
+                                    
                                     <View style={_home.countButton}>
-                                        <Icon name='add' type='ionicon' color='#3B78FF' onPress={() => {
-                                            setTravelDetail(prevDetail => ({
-                                                ...prevDetail,
-                                                passengers: prevDetail.adult < 10 ? prevDetail.adult + 1 : prevDetail.adult,
-                                                adult: prevDetail.adult < 10 ? prevDetail.adult + 1 : prevDetail.adult,
-                                                children: 0,
-                                                infant: 0
-                                            }))
-                                        }} />
-                                        <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View>
-                                        <Icon name='remove' type='ionicon' color='#3B78FF' onPress={() => {
+                                        {/* <View style={{ borderRightWidth: 1, margin: 4, borderColor: '#707070' }}></View> */}
+                                        <Icon name='remove-circle' type='ionicon' color={plusIcon && travelDetail.passengers !== 1 ? '#3B78FF' : "#6f6f70"} size={28} onPress={() => {
                                             setTravelDetail(prevDetail => ({
                                                 ...prevDetail,
                                                 passengers: prevDetail.adult > 1 ? prevDetail.adult - 1 : 1,
@@ -680,28 +703,43 @@ export default function Home({ navigation }){
                                             }))
                                         }} />
                                     </View>
-                                </TouchableOpacity>
+
+                                    <View style={_home.countButton}>
+                                        <Icon name='add-circle' type='ionicon' color='#3B78FF' size={28} onPress={() => {
+                                            setTravelDetail(prevDetail => ({
+                                                ...prevDetail,
+                                                passengers: prevDetail.adult < 10 ? prevDetail.adult + 1 : prevDetail.adult,
+                                                adult: prevDetail.adult < 10 ? prevDetail.adult + 1 : prevDetail.adult,
+                                                children: 0,
+                                                infant: 0
+                                            }))
+                                            setPlusIcon(true)
+
+                                        }} />
+                                     </View>
+                                    </View>
+                            </TouchableOpacity>
+                            
                                 <TouchableOpacity style={_home.inputBox} onPress={() => setSort(true)}>
                                     <Icon name='airline-seat-recline-normal' type='material' color='#3B78FF' />
                                     <TextInput placeholder='Economy' style={{ width: '100%', height: '100%', paddingLeft: 6, color: 'black', fontFamily: 'poppins-regular' }} editable={false} value={travelDetail.class_type1} />
                                 </TouchableOpacity>
-                                {/*
-                            <View style={{ marginVertical: 6 }}>
-                                <TouchableOpacity style={{ flexDirection: 'row' }}>
+                                <View style={{ marginVertical: 6 }}>
+                                <TouchableOpacity style={{ flexDirection: 'row', marginHorizontal: "2%" }} onPress={() => {setDirect(!direct)}}>
                                     <View style={[ 
                                         {
-                                            width: 18, 
-                                            height: 18, 
+                                            width: 16, 
+                                            height: 16, 
                                             justifyContent: 'center',
                                             alignItem: 'center',
-                                            backgroundColor: '#3B78FF', 
-                                            borderWidth: 0
+                                            backgroundColor: direct ? 'white' : '#3B78FF',
+                                            borderWidth: direct ? 1 : 0,
+                                            borderColor:"#5b5b5c"
                                         }
                                     ]}><Icon name='checkmark' type='ionicon' color='white' size={15}/></View>
                                     <Text style={{ fontFamily: 'poppins-regular', fontSize: 12, marginLeft: 6 }}>Direct Flights</Text>
                                 </TouchableOpacity>
                             </View>
-                            */}
                             </View>
                         )}
 
@@ -1460,13 +1498,11 @@ let _home = StyleSheet.create({
         borderColor: '#06122BB3',
     },
     countButton: {
-        position: 'absolute', 
-        flexDirection: 'row', 
-        right: 8,
-        borderWidth: 1,
-        borderRadius: 8,
-        justifyContent: 'space-around',
-        paddingHorizontal: 6,
+        width: 29,
+        height:29,
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
         borderColor: '#00000029',
     },
     searchButton: {
